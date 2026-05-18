@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CloudX</title>
+       <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray: #1a1a1a;
+            --danger: #ff0000;
+            --info: #007bff;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--black);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            font-size: 2.5rem;
+            color: var(--white);
+            margin: 0;
+            transition: all 0.3s ease;
+            line-height: 1;
+            z-index: 1;
+        }
+
+        .auth-container {
+            max-width: 450px;
+            margin: 5rem auto;
+            padding: 2.5rem;
+            text-align: center;
+            overflow: hidden; /* Important for animation */
+            position: relative; /* Important for animation */
+        }
+
+        .form-wrapper {
+            transition: transform 0.5s ease-in-out, opacity 0.4s ease-in-out;
+            width: 100%;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        #forgot-password-form-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: inherit;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container.show-forgot-password #login-form-wrapper {
+            transform: translateX(-100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container.show-forgot-password #forgot-password-form-wrapper {
+            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .password-field-container {
+            position: relative;
+        }
+
+        .input-field {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--white);
+            color: var(--white);
+            padding: 14px 0 10px 0;
+            width: 100%;
+            font-size: 1.1rem;
+            height: 44px;
+            box-sizing: border-box;
+        }
+
+        .input-field::placeholder {
+            color: var(--white);
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-bottom-color: var(--white);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0;
+            top: 40%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        .password-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--white);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .forgot-password-modern {
+            text-align: right;
+            margin-top: 8px;
+            font-size: 0.8rem;
+        }
+
+        .forgot-password-modern a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            font-size: 0.8rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .forgot-password-modern a:hover {
+            opacity: 1;
+        }
+
+        .btn {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--white);
+            padding: 0 25px;
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: max-content;
+            height: 44px;
+            box-sizing: border-box;
+            line-height: 1;
+            position: relative;
+        }
+
+        .btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+
+        .flash-message {
+            background: var(--gray);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .logo-img {
+          max-width: 180px;
+          width: 100%;
+          height: auto;
+          display: block;
+          margin: -40px auto 70px auto; 
+        }
+
+        .form-description {
+            font-size: 1rem;
+            color: #8a8a8a;
+            margin: 40px 0 20px 0;
+            line-height: 1.4;
+        }
+
+.nav-linky {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover, .nav-link:active {
+    color: #ffffff;
+}
+
+.nav-link:hover::after, .nav-link:active::after {
+    width: 100%;
+}
+
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+          .logo-img {
+            max-width: 150px;
+          }
+          
+          .password-toggle svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .logo-img {
+            max-width: 130px;
+          }
+          
+          .forgot-password-modern {
+            text-align: center;
+            margin-top: 12px;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .logo-img {
+            max-width: 100px;
+          }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="auth-container" id="auth-container">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">        
+        
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {# Only show login/registration related messages #}
+            {% if category in ['login', 'registration', 'password_reset', 'info', 'success', 'error', 'warning'] %}
+            <div class="flash-message">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+        
+        <div id="login-form-wrapper" class="form-wrapper">
+            <form action="{{ url_for('login') }}" method="post" class="auth-form">
+                <input type="email" name="email" class="input-field" placeholder="EMAIL" required>
+                <div class="password-field-container">
+                    <input type="password" id="password" name="password" class="input-field" placeholder="PASSWORD" required>
+                    <div class="password-toggle" onclick="togglePassword()">
+                        <svg id="eye-icon" viewBox="0 0 24 24">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        </svg>
+                    </div>
+                    <div class="forgot-password-modern">
+                        <a id="show-forgot-password">Forgot Password?</a>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+<div class="auth-link">
+    <a class="nav-linky">Don't have an account? </a><a href="{{ url_for('register') }}" class="nav-link">Register</a>
+</div>
+        </div>
+
+        <div id="forgot-password-form-wrapper" class="form-wrapper">
+            <p class="form-description">Enter your email and we'll send you a link to reset your password.</p>
+            <form action="{{ url_for('forgot_password') }}" method="post" class="auth-form">
+                <input type="email" name="email" class="input-field" placeholder="EMAIL" required>
+                <button type="submit" class="btn">Send Reset Link</button>
+            </form>
+            <div>
+                <a id="show-login" class="nav-link">Back to Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const loadingScreen = document.querySelector('.loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        // Password toggle functionality
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordField.type === 'password') {
+                // Show password - open eye
+                passwordField.type = 'text';
+                eyeIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            } else {
+                // Hide password - crossed eye
+                passwordField.type = 'password';
+                eyeIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                `;
+            }
+        }
+
+        // Form switching logic
+        const authContainer = document.getElementById('auth-container');
+        const showForgotPasswordLink = document.getElementById('show-forgot-password');
+        const showLoginLink = document.getElementById('show-login');
+
+        showForgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authContainer.classList.add('show-forgot-password');
+        });
+
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authContainer.classList.remove('show-forgot-password');
+        });
+
+    </script>
+</body>
+</html>

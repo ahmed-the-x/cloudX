@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Account - CloudX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --border: rgba(255, 255, 255, 0.06);
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.5);
+  --accent: #ffffff;
+}
+
+body {
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.account-page {
+  background: var(--bg);
+  min-height: 100vh;
+  padding-top: 6rem;
+}
+
+.account-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  margin: 0;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.current-plan-badge {
+  padding: 0.25rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.account-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.account-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.account-section:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.account-section h2 {
+  margin: 0;
+  padding: 2.5rem 2.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.account-content {
+  padding: 2rem 2.5rem 2.5rem;
+}
+
+.info-group {
+  margin-bottom: 1.5rem;
+}
+
+.info-group:last-child {
+  margin-bottom: 0;
+}
+
+.info-group label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+  font-weight: 300;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  color: var(--text);
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--border);
+  font-weight: 300;
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-field::placeholder {
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.btn {
+  width: fit-content;
+  padding: 1rem 2rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border-radius: 0.75rem;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.plan-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.plan-details {
+  flex-grow: 1;
+}
+
+.plan-name {
+  font-size: 1.4rem;
+  font-weight: 300;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.storage-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.storage-progress {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.storage-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.file-icon2 {
+  width: 40px;
+  height: 40px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+.feature-title {
+  font-size: 1rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+  font-weight: 300;
+}
+
+.feature-value {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text);
+}
+
+.subscription-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.subscription-details {
+  flex-grow: 1;
+}
+
+.subscription-status {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.next-billing {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.subscription-actions {
+  flex-shrink: 0;
+}
+
+.danger-section {
+  border-color: rgba(255, 68, 68, 0.15);
+}
+
+.danger-section h2 {
+  color: rgba(255, 68, 68, 0.8);
+}
+
+.danger-section:hover {
+  border-color: rgba(255, 68, 68, 0.25);
+}
+
+.danger-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.danger-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: rgba(255, 68, 68, 0.02);
+  border: 1px solid rgba(255, 68, 68, 0.08);
+  border-radius: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.danger-action:hover {
+  background: rgba(255, 68, 68, 0.04);
+  border-color: rgba(255, 68, 68, 0.15);
+  transform: translateY(-2px);
+}
+
+.danger-info {
+  flex-grow: 1;
+}
+
+.danger-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgba(255, 68, 68, 0.9);
+  margin-bottom: 0.5rem;
+}
+
+.danger-description {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.delete-form {
+  flex-shrink: 0;
+}
+
+.btn.danger {
+  background: transparent;
+  color: rgba(255, 68, 68, 0.9);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.btn.danger:hover {
+  background: rgba(255, 68, 68, 0.9);
+  color: var(--bg);
+  border-color: rgba(255, 68, 68, 0.9);
+}
+
+.flash-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+}
+
+.flash-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.flash-popup {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 3rem 2.5rem 2.5rem;
+  text-align: center;
+  border-radius: 1.5rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  max-width: 500px;
+  width: 90%;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.flash-popup.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.flash-popup p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.flash-popup .close-flash {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.5rem;
+  line-height: 1;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flash-popup .close-flash:hover {
+  color: var(--text);
+}
+
+.hamburger-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburger-toggle:focus {
+  outline: none;
+}
+
+.logo-img {
+  max-width: 160px;
+}
+
+@media (max-width: 768px) {
+  .account-page {
+    padding-top: 5rem;
+  }
+
+  .account-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .account-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .account-header h1 {
+    font-size: 2rem;
+  }
+  
+  .account-section h2 {
+    padding: 2rem 1.5rem 0;
+    font-size: 0.85rem;
+  }
+  
+  .account-content {
+    padding: 1.5rem;
+  }
+  
+  .plan-info,
+  .subscription-info,
+  .danger-action {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  
+  .feature-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .flash-popup {
+    max-width: calc(100% - 2rem);
+    padding: 2.5rem 2rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .account-container {
+    padding: 1rem;
+  }
+  
+  .account-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .current-plan-badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.8rem;
+  }
+  
+  .account-section h2 {
+    padding: 1.5rem 1rem 0;
+    font-size: 0.8rem;
+  }
+  
+  .account-content {
+    padding: 1rem;
+  }
+  
+  .feature-card {
+    padding: 1.2rem 0.8rem;
+  }
+  
+  .danger-action {
+    padding: 1.5rem 1rem;
+  }
+
+  .flash-popup {
+    max-width: calc(100% - 1.5rem);
+    padding: 2rem 1.5rem 1.5rem;
+    border-radius: 1.25rem;
+  }
+
+  .flash-popup p {
+    font-size: 0.95rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.account-section {
+  animation: fadeIn 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.account-section:nth-child(1) { animation-delay: 0.05s; }
+.account-section:nth-child(2) { animation-delay: 0.1s; }
+.account-section:nth-child(3) { animation-delay: 0.15s; }
+.account-section:nth-child(4) { animation-delay: 0.2s; }
+.account-section:nth-child(5) { animation-delay: 0.25s; }
+.account-section:nth-child(6) { animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .account-section,
+  .feature-card,
+  .danger-action {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .account-section:hover,
+  .feature-card:hover,
+  .danger-action:hover {
+    transform: none;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="loading-screen"><div class="logo">CloudX</div></div>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+    </div>
+    <div class="mobile-menu-items">
+      <div class="mobile-menu-user">{{ username }} ({{ details.plan_name }} Plan)</div>
+      <a href="{{ url_for('mycloud') }}" class="mobile-menu-item">My Cloud</a>
+      <a href="{{ url_for('shared_files') }}" class="mobile-menu-item">My Shared Files</a>
+      <a href="{{ url_for('account') }}" class="mobile-menu-item active">Account</a>
+      {% if tier == 'free' %}
+        <a href="{{ url_for('upgrade') }}" class="mobile-menu-item">Go Premium</a>
+      {% elif tier in ['basic', 'plus'] %}
+        <a href="{{ url_for('upgrade') }}" class="mobile-menu-item">Upgrade</a>
+      {% endif %}
+      <a href="{{ url_for('logout') }}" class="mobile-menu-item" style="border-bottom: none;">Logout</a>
+    </div>
+  </div>
+  <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="flash-popup-overlay" id="flash-overlay-{{ loop.index }}">
+          <div class="flash-popup" id="flash-popup-{{ loop.index }}">
+            <p>{{ message }}</p>
+            <button class="close-flash" onclick="closeFlashMessage('flash-popup-{{ loop.index }}')">&times;</button>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+        <div class="hamburger-menu">
+          <button class="hamburger-toggle" id="hamburger-toggle">
+            <div class="hamburger-icon" id="hamburger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="account-container">
+      <div class="account-header">
+        <h1>Account Settings</h1>
+        <div class="current-plan-badge">{{ details.plan_name }} Plan</div>
+      </div>
+
+      <div class="account-sections">
+        <div class="account-section">
+          <h2>Profile Information</h2>
+          <div class="account-content">
+            <div class="info-group">
+              <label>Username</label>
+              <div class="info-value">{{ username }}</div>
+            </div>
+            <div class="info-group">
+              <label>Email</label>
+              <div class="info-value">{{ email }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-section">
+          <h2>Change Password</h2>
+          <div class="account-content">
+            <form action="{{ url_for('change_password') }}" method="post" class="password-form">
+              <div class="form-group">
+                <input type="password" name="current_password" class="input-field" placeholder="Current Password" required />
+              </div>
+              <div class="form-group">
+                <input type="password" name="new_password" class="input-field" placeholder="New Password" required />
+              </div>
+              <div class="form-group">
+                <input type="password" name="confirm_password" class="input-field" placeholder="Confirm New Password" required />
+              </div>
+              <button type="submit" class="btn">Update Password</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="account-section">
+          <h2>Current Plan & Usage</h2>
+          <div class="account-content">
+            <div class="plan-info">
+              <div class="plan-details">
+                <div class="plan-name">{{ details.plan_name }} Plan</div>
+                <div class="storage-bar">
+                  <div class="storage-progress" style="width: {{ percent_used }}%"></div>
+                </div>
+                <div class="storage-info">
+                  <span>{{ "%.1f"|format(used / (1024**2)) }} MB of {{ "%.0f"|format(quota / (1024**3)) }} GB used</span>
+                  <span>{{ "%.1f"|format(percent_used) }}%</span>
+                </div>
+              </div>
+              {% if tier in ['free', 'basic', 'plus'] %}
+              <a href="{{ url_for('upgrade') }}" class="btn">Upgrade Plan</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="account-section">
+          <h2>Plan Features</h2>
+          <div class="account-content">
+            <div class="features-grid">
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/storage.svg') }}" alt="Storage" class="file-icon2">
+                </div>
+                <div class="feature-title">Storage Capacity</div>
+                <div class="feature-value">{{ details.storage_capacity }}</div>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/cloud-upload.svg') }}" alt="Upload" class="file-icon2">
+                </div>
+                <div class="feature-title">Max Upload Size</div>
+                <div class="feature-value">{{ details.upload_limit }}</div>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/wait.svg') }}" alt="Queue" class="file-icon2">
+                </div>
+                <div class="feature-title">Upload Queue</div>
+                <div class="feature-value">{% if tier == 'free' %}Present{% else %}Instant Upload{% endif %}</div>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/speed.svg') }}" alt="Speed" class="file-icon2">
+                </div>
+                <div class="feature-title">Speed</div>
+                <div class="feature-value">{{ details.speed }}</div>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/cloud-download.svg') }}" alt="Downloads" class="file-icon2">
+                </div>
+                <div class="feature-title">Bulk Downloads</div>
+                <div class="feature-value">{% if tier == 'free' %}Not Available{% else %}Available{% endif %}</div>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/share-2.svg') }}" alt="Sharing" class="file-icon2">
+                </div>
+                <div class="feature-title">File Sharing</div>
+                <div class="feature-value">{% if details.file_sharing %}Available{% else %}Not Available{% endif %}</div>
+              </div>
+              <div class="feature-card">
+                <div class="feature-icon">
+                  <img src="{{ url_for('static', filename='icons/ads.svg') }}" alt="Ads" class="file-icon2">
+                </div>
+                <div class="feature-title">Advertisements</div>
+                <div class="feature-value">{% if details.ads %}Present{% else %}Ad-Free{% endif %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {% if tier in ['basic', 'plus', 'pro'] %}
+        <div class="account-section">
+          <h2>Subscription Management</h2>
+          <div class="account-content">
+            <div class="subscription-info">
+              <div class="subscription-details">
+                <div class="subscription-status">Active</div>
+                <div class="next-billing">Your subscription is managed by our payment provider.</div>
+              </div>
+              <div class="subscription-actions">
+                <form action="{{ url_for('cancel_subscription') }}" method="post" class="cancel-form">
+                  <button type="submit" class="btn" onclick="return confirm('Are you sure? This will cancel your subscription and downgrade you to the Free plan at the end of your billing cycle.')">
+                    Cancel Subscription
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="account-section danger-section">
+          <h2>Danger Zone</h2>
+          <div class="account-content">
+            <div class="danger-actions">
+              <div class="danger-action">
+                <div class="danger-info">
+                  <div class="danger-title">Delete Account</div>
+                  <div class="danger-description">Permanently delete your account and all associated data. This action cannot be undone.</div>
+                </div>
+                <form action="{{ url_for('delete_account') }}" method="post" class="delete-form">
+                  <button type="submit" class="btn danger" onclick="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.')">
+                    Delete My Account
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+function closeFlashMessage(popupId) {
+  const popup = document.getElementById(popupId);
+  const overlay = popup ? popup.closest('.flash-popup-overlay') : null;
+  
+  if (popup && overlay) {
+    popup.classList.remove('active');
+    overlay.classList.remove('active');
+    
+    setTimeout(() => {
+      overlay.remove();
+    }, 300);
+  }
+}
+
+function showFlashMessages() {
+  const flashOverlays = document.querySelectorAll('.flash-popup-overlay');
+  flashOverlays.forEach((overlay, index) => {
+    const popup = overlay.querySelector('.flash-popup');
+    
+    setTimeout(() => {
+      overlay.classList.add('active');
+      popup.classList.add('active');
+      
+      setTimeout(() => {
+        if (popup.classList.contains('active')) {
+          closeFlashMessage(popup.id);
+        }
+      }, 5000);
+    }, index * 300);
+  });
+}
+
+function closeMenu() {
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+  
+  hamburgerIcon?.classList.remove('active');
+  mobileMenu?.classList.remove('active');
+  mobileMenuOverlay?.classList.remove('active');
+  document.body.style.overflow = '';
+  document.body.classList.remove('menu-active');
+}
+
+function setupHamburgerMenu() {
+  const toggle = document.getElementById("hamburger-toggle");
+  const icon = document.getElementById("hamburger-icon");
+  const menu = document.getElementById("mobile-menu");
+  const overlay = document.getElementById("mobile-menu-overlay");
+  const body = document.body;
+
+  function closeMenu() {
+    icon.classList.remove("active");
+    menu.classList.remove("active");
+    overlay.classList.remove("active");
+    body.classList.remove("menu-active");
+    document.body.style.overflow = '';
+  }
+
+  function openMenu() {
+    icon.classList.add("active");
+    menu.classList.add("active");
+    overlay.classList.add("active");
+    body.classList.add("menu-active");
+    document.body.style.overflow = 'hidden';
+  }
+
+  toggle.addEventListener('click', () => {
+    if (menu.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  
+  overlay.addEventListener('click', closeMenu);
+  document.querySelectorAll('.mobile-menu-item, .nav-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+}
+
+function handleScroll() {
+  const header = document.querySelector('header');
+  if (header) {
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  setupHamburgerMenu();
+  showFlashMessages();
+  handleScroll();
+});
+
+window.addEventListener('scroll', handleScroll);
+
+window.addEventListener("load", () => {
+  const loadingScreen = document.querySelector(".loading-screen");
+  if (loadingScreen) {
+    loadingScreen.style.opacity = "0";
+    setTimeout(() => {
+      loadingScreen.style.display = "none";
+    }, 300);
+  }
+});
+</script>
+</body>
+</html>

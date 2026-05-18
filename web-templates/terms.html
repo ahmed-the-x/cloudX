@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Terms of Service - CloudX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='website.css') }}" />
+
+  <style>
+    .hero-section {
+      padding-top: 8rem;
+      padding-bottom: 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .hero-content {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .policy-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .policy-section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .policy-section h2 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      color: #fff;
+    }
+
+    .policy-section h3 {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .policy-section p {
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+    }
+
+    .policy-section ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .policy-section li {
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.5rem;
+    }
+
+    .last-updated {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
+    }
+
+    .highlight-box {
+      background: rgba(0, 255, 157, 0.05);
+      border-left: 3px solid #00ff9d;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 8px;
+    }
+
+    .highlight-box p {
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.85);
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <header>
+      <div class="header-content">
+        <a href="/" class="logo">
+          <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo">
+        </a>
+
+        <div class="hamburger-menu" id="hamburger-toggle">
+          <div class="hamburger-icon" id="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+      </div>
+      <div class="mobile-menu-items">
+        <a href="/about" class="mobile-menu-item">About</a>
+        <a href="/pricing" class="mobile-menu-item">Pricing</a>
+        <a href="/why-us" class="mobile-menu-item">Why Us?</a>
+        <a href="/contact" class="mobile-menu-item">Contact</a>
+<a href="https://app.cloudxhq.com/login" class="mobile-menu-item">Login</a>     
+
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Terms of Service</h1>
+        <p class="hero-subtitle">Simple terms for a simple service.</p>
+      </div>
+
+      <p class="last-updated">Last Updated: October 31, 2025</p>
+
+      <div class="policy-content">
+        <div class="highlight-box">
+          <p><strong>The Simple Version:</strong> Use CloudX responsibly, don't upload illegal content, and respect that your files are encrypted and private. We'll give you 30 days notice if we ever shut down.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>1. Acceptance of Terms</h2>
+          <p>By accessing or using CloudX (cloudxhq.com), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use our service.</p>
+          <p>These Terms constitute a legally binding agreement between you and CloudX. Please read them carefully.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>2. Description of Service</h2>
+          <p>CloudX provides encrypted file storage and sharing services. Our service includes:</p>
+          <ul>
+            <li>Secure file storage with AES-256 bit server-side encryption</li>
+            <li>File upload and download capabilities</li>
+            <li>Multiple subscription tiers with varying storage and bandwidth limits</li>
+            <li>Secure infrastructure with protected access controls</li>
+          </ul>
+          <p>CloudX is designed to protect your data from unauthorized access and AI algorithms that seek to analyze or exploit user data.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>3. Account Registration</h2>
+          <p>To use CloudX, you must create an account. You agree to:</p>
+          <ul>
+            <li>Provide accurate and complete information during registration</li>
+            <li>Maintain the security of your account credentials</li>
+            <li>Notify us immediately of any unauthorized use of your account</li>
+            <li>Be responsible for all activities that occur under your account</li>
+          </ul>
+          <p>You must be at least 13 years old to create an account. Users under 18 should have parental consent.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>4. Subscription Plans</h2>
+          
+          <h3>Free Plan</h3>
+          <p>Our Free Plan is free forever and includes:</p>
+          <ul>
+            <li>Limited storage space</li>
+            <li>2 MB/s bandwidth (16 Mbps upload and download)</li>
+            <li>All core features</li>
+            <li>No credit card required</li>
+          </ul>
+
+          <h3>Paid Plans</h3>
+          <p>We offer Basic, Plus, and Pro subscription plans with increased storage and bandwidth:</p>
+          <ul>
+            <li><strong>Basic Plan:</strong> 4 MB/s bandwidth (32 Mbps)</li>
+            <li><strong>Plus Plan:</strong> 6 MB/s bandwidth (48 Mbps)</li>
+            <li><strong>Pro Plan:</strong> 10 MB/s bandwidth (80 Mbps)</li>
+          </ul>
+          <p>Paid subscriptions are ongoing and will continue until you cancel or CloudX ceases operations.</p>
+
+          <h3>Bandwidth Requirements</h3>
+          <p>To take full advantage of your plan's allocated bandwidth, ensure your internet connection speed meets or exceeds the plan limits. Note that 1 MB/s equals 8 Mbps. Bandwidth speeds apply to both uploads and downloads.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>5. Payment and Billing</h2>
+          <p>For paid plans:</p>
+          <ul>
+            <li>Payments are processed securely through our payment processor</li>
+            <li>Subscriptions automatically renew unless cancelled</li>
+            <li>You can cancel your subscription at any time</li>
+            <li>Refunds are handled on a case-by-case basis</li>
+            <li>Price changes will be communicated with 30 days advance notice</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>6. Acceptable Use Policy</h2>
+          
+          <h3>You May Use CloudX To:</h3>
+          <ul>
+            <li>Store and share your personal and professional files</li>
+            <li>Back up your data securely</li>
+            <li>Collaborate with others on projects</li>
+            <li>Access your files from anywhere</li>
+          </ul>
+
+          <h3>You May Not Use CloudX To:</h3>
+          <ul>
+            <li>Upload, store, or share illegal content</li>
+            <li>Distribute malware, viruses, or malicious software</li>
+            <li>Infringe on intellectual property rights</li>
+            <li>Store child sexual abuse material or any content exploiting minors</li>
+            <li>Engage in harassment, hate speech, or threats</li>
+            <li>Attempt to breach security or access other users' accounts</li>
+            <li>Use the service to spam or send unsolicited communications</li>
+            <li>Violate any applicable laws or regulations</li>
+            <li>Resell or redistribute the service without authorization</li>
+          </ul>
+
+          <p>Violation of this Acceptable Use Policy may result in immediate account suspension or termination without refund.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>7. File Security and Privacy</h2>
+          
+          <h3>Encryption</h3>
+          <p>All files uploaded to CloudX are encrypted server-side using AES-256 bit encryption. This means:</p>
+          <ul>
+            <li>Your files are encrypted at rest on our servers</li>
+            <li>Server-side encryption protects your data in storage</li>
+            <li>Files are securely transmitted via HTTPS</li>
+          </ul>
+
+          <h3>Virus Scanning</h3>
+          <p>We perform automated virus scanning on files before upload to protect our infrastructure and users. After the virus scan, files are immediately encrypted. We do not:</p>
+          <ul>
+            <li>Scan files for content beyond virus detection</li>
+            <li>Use AI or machine learning on your files</li>
+            <li>Sell, share, or analyze your file contents</li>
+          </ul>
+
+          <h3>Your Responsibility</h3>
+          <p>While we encrypt your files, you are responsible for:</p>
+          <ul>
+            <li>Maintaining secure passwords</li>
+            <li>Not sharing your account credentials</li>
+            <li>Ensuring you have the right to upload and store the files you submit</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>8. Data Retention and Deletion</h2>
+          <p>Your files remain on our servers as long as you maintain an active account. You may:</p>
+          <ul>
+            <li>Delete files at any time</li>
+            <li>Close your account at any time</li>
+            <li>Export all your files before closing your account</li>
+          </ul>
+          <p>Upon account closure, all files and associated data will be permanently deleted within 30 days. This deletion is irreversible.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>9. Service Availability</h2>
+          <p>We strive to maintain 99.9% uptime, but we cannot guarantee uninterrupted service. CloudX may be temporarily unavailable due to:</p>
+          <ul>
+            <li>Scheduled maintenance (announced in advance)</li>
+            <li>Unexpected technical issues</li>
+            <li>Force majeure events</li>
+          </ul>
+          <p>We are not liable for any losses resulting from service interruptions.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>10. Service Termination</h2>
+          
+          <h3>Your Right to Terminate</h3>
+          <p>You may terminate your account at any time by closing it through your account settings. Paid subscriptions can be cancelled, but fees already paid are non-refundable except as required by law.</p>
+
+          <h3>Our Right to Terminate</h3>
+          <p>We may suspend or terminate your account if:</p>
+          <ul>
+            <li>You violate these Terms of Service</li>
+            <li>You engage in illegal activities</li>
+            <li>Your payment fails (for paid plans)</li>
+            <li>Required by law</li>
+          </ul>
+
+          <h3>Service Discontinuation</h3>
+          <p>If CloudX ceases operations, we will provide you with 30 days advance notice. During this period, you will have full access to download all your files. After the notice period, all data will be permanently deleted.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>11. Intellectual Property</h2>
+          
+          <h3>Your Content</h3>
+          <p>You retain all ownership rights to the files you upload to CloudX. By using our service, you grant us only the limited rights necessary to:</p>
+          <ul>
+            <li>Store your encrypted files on our servers</li>
+            <li>Transmit your files when you request downloads or shares</li>
+            <li>Perform virus scanning before encryption</li>
+          </ul>
+          <p>We do not claim ownership of your files and will never use them for any purpose beyond providing the service.</p>
+
+          <h3>CloudX Property</h3>
+          <p>The CloudX service, including all software, design, logos, and trademarks, is owned by CloudX and protected by copyright and trademark laws. You may not:</p>
+          <ul>
+            <li>Copy or modify our software</li>
+            <li>Reverse engineer our platform</li>
+            <li>Use our branding without permission</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>12. Limitation of Liability</h2>
+          <p>To the maximum extent permitted by law, CloudX and its operators shall not be liable for:</p>
+          <ul>
+            <li>Loss of data due to user error or account closure</li>
+            <li>Indirect, incidental, or consequential damages</li>
+            <li>Loss of profits or business opportunities</li>
+            <li>Service interruptions or data transmission errors</li>
+          </ul>
+          <p>Our total liability for any claim arising from your use of CloudX shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
+          <p><strong>Important:</strong> While we use industry-standard encryption and security measures, no system is completely secure. You should maintain backups of critical files.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>13. Disclaimer of Warranties</h2>
+          <p>CloudX is provided "as is" and "as available" without warranties of any kind, either express or implied, including but not limited to:</p>
+          <ul>
+            <li>Warranties of merchantability</li>
+            <li>Fitness for a particular purpose</li>
+            <li>Non-infringement</li>
+            <li>Uninterrupted or error-free service</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>14. Indemnification</h2>
+          <p>You agree to indemnify and hold harmless CloudX, its operators, employees, and affiliates from any claims, damages, losses, or expenses (including legal fees) arising from:</p>
+          <ul>
+            <li>Your use of the service</li>
+            <li>Your violation of these Terms</li>
+            <li>Your violation of any law or rights of third parties</li>
+            <li>Content you upload to the service</li>
+          </ul>
+        </div>
+
+        <div class="policy-section">
+          <h2>15. Privacy and Data Protection</h2>
+          <p>Your use of CloudX is also governed by our Privacy Policy, which explains how we handle your data. Key points include:</p>
+          <ul>
+            <li>We cannot access your encrypted files</li>
+            <li>We do not sell or share your data</li>
+            <li>We use cookies only for essential website functionality</li>
+            <li>We do not track your behavior or use analytics</li>
+          </ul>
+          <p>Please review our Privacy Policy at cloudxhq.com/privacy for complete details.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>16. Changes to Terms</h2>
+          <p>We may update these Terms of Service from time to time. Changes will be effective when posted on this page with an updated "Last Updated" date. Material changes will be communicated via:</p>
+          <ul>
+            <li>Email notification to registered users</li>
+            <li>Prominent notice on our website</li>
+          </ul>
+          <p>Your continued use of CloudX after changes are posted constitutes acceptance of the updated Terms.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>17. Governing Law</h2>
+          <p>These Terms shall be governed by and construed in accordance with applicable law. Any disputes arising from these Terms or your use of CloudX shall be resolved through binding arbitration, except where prohibited by law.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>18. Severability</h2>
+          <p>If any provision of these Terms is found to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>19. Entire Agreement</h2>
+          <p>These Terms of Service, together with our Privacy Policy, constitute the entire agreement between you and CloudX regarding your use of the service and supersede all prior agreements.</p>
+        </div>
+
+        <div class="policy-section">
+          <h2>20. Contact Information</h2>
+          <p>If you have questions about these Terms of Service, please contact us through our contact page at cloudxhq.com/contact.</p>
+          <p>We are committed to addressing your concerns and maintaining a transparent relationship with our users.</p>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 3rem;">
+          <p><strong>Our Commitment:</strong> These terms exist to protect both you and CloudX. We built this service to fight against AI and algorithms taking over people's data. Your files are yours, encrypted and private, and these terms ensure it stays that way.</p>
+        </div>
+      </div>
+
+      <div class="cta-section" style="margin-top: 5rem;">
+        <h2 class="cta-title">Questions answered?</h2>
+        <p class="cta-subtitle">Start storing your files securely today.</p>
+        <div class="hero-cta">
+          <button class="btn success" onclick="window.location.href='/pricing'">Start Free</button>
+          <button class="btn" onclick="window.location.href='/about'">Learn More</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p><span class="nav-linky"> CloudX &copy; 2025 </span> | <a href="/privacy" class="nav-link"> Privacy Policy </a> | <a href="/terms" class="nav-link">Terms of Service</a></p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Mobile Menu Functionality
+    const toggle = document.getElementById("hamburger-toggle");
+    const icon = document.getElementById("hamburger-icon");
+    const menu = document.getElementById("mobile-menu");
+    const overlay = document.getElementById("mobile-menu-overlay");
+    const body = document.body;
+
+    function closeMenu() {
+      icon.classList.remove("active");
+      menu.classList.remove("active");
+      overlay.classList.remove("active");
+      body.classList.remove("menu-active");
+      document.body.style.overflow = '';
+    }
+
+    function openMenu() {
+      icon.classList.add("active");
+      menu.classList.add("active");
+      overlay.classList.add("active");
+      body.classList.add("menu-active");
+      document.body.style.overflow = 'hidden';
+    }
+
+    toggle.addEventListener('click', () => menu.classList.contains('active') ? closeMenu() : openMenu());
+    overlay.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu-item, .nav-link').forEach(link => link.addEventListener('click', closeMenu));
+
+    // Smooth Scrolling for Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scroll Effects
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+  </script>
+</body>
+</html>

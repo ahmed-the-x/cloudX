@@ -1,0 +1,3115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Cloud - CloudX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+   <style>
+:root {
+  --bg: #000000;
+  --surface: #0a0a0a;
+  --border: rgba(255, 255, 255, 0.06);
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.5);
+  --accent: #ffffff;
+}
+
+.logo-img {
+  max-width: 150px;
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0; 
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .logo-img {
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-img {
+    max-width: 110px;
+  }
+}
+
+@media (max-width: 320px) {
+  .logo-img {
+    max-width: 100px;
+  }
+}
+
+/* --- Styles for Share Modal --- */
+.share-options {
+    padding-bottom: 20px; /* Adds space below the options */
+}
+
+.share-option-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px; /* Consistent spacing between rows */
+}
+.share-option-item > label:first-child {
+    flex-shrink: 0;
+    flex-basis: 120px; /* Ensures all labels align */
+    text-align: left;  /* Aligns the label text to the left */
+}
+.share-option-item .input-field {
+    flex-grow: 1;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  top: 10px; /* Nudges the switch down from the vertical center */
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+/* Spotify Green for 'ON' state */
+input:checked + .slider {
+  background-color: #1DB954;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #1DB954;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+.slider.round {
+  border-radius: 24px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Styles for Password Toggle */
+.password-field-container {
+    position: relative;
+    flex-grow: 1;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 5px;
+    top: 60%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-toggle:hover {
+    opacity: 1;
+}
+
+.password-toggle svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--white, #fff);
+    fill: none;
+    stroke-width: 2;
+}
+
+/* --- New Styles for Access Checkboxes --- */
+.access-checkbox-group {
+    display: flex;
+    gap: 25px; /* Space between Preview and Download options */
+    align-items: center;
+    flex-grow: 1;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between checkbox and its label */
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+    
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: #1DB954; /* Green to match the toggle switch */
+    border-color: #1DB954;
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+    content: '✔';
+    font-size: 12px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checkbox-container input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    background-color: #222;
+    border-color: #444;
+}
+
+.checkbox-container input[type="checkbox"]:checked:disabled {
+    background-color: #1DB954; /* Green when checked */
+    opacity: 0.7; /* Make it look inactive */
+}
+
+.checkbox-container input[type="checkbox"]:disabled + label {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.checkbox-container label {
+    cursor: pointer;
+    user-select: none;
+    color: #888;
+    transition: color 0.3s ease;
+    font-size: 17px;
+    position: relative;
+    top: 4px; /* Adjust this value to move the label down */
+}
+
+.checkbox-container input[type="checkbox"]:checked + label {
+    color: inherit; /* Reverts to the default text color when selected */
+}
+
+.disabled-feature {
+    opacity: 0.6;
+}
+
+.slideshow-popup .upgrade-btn {
+  display: inline-block;   /* keeps the button’s natural width */
+  margin-top: 20px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* --- MODIFIED: Upload Progress Popup Styles --- */
+.upload-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.upload-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.upload-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 1.5rem;
+  border: 1px solid var(--border);
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  z-index: 1002;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden; /* Important for the slide effect */
+}
+
+.upload-popup.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%);
+}
+
+.upload-popup-content-wrapper {
+  display: flex;
+  width: 200%; /* Two slides */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-popup-slide {
+  width: 50%; /* Each slide takes half of the wrapper */
+  padding: 2.5rem;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.upload-popup-header h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.upload-popup-header p {
+  margin: 0 0 2rem 0;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 300;
+  min-height: 2.5em; /* Reserve space to prevent layout shift */
+}
+
+.upload-progress-info {
+  margin-bottom: 1.5rem;
+}
+
+.upload-filename {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+  font-weight: 300;
+  min-height: 1.2em;
+}
+
+.upload-progress-bar-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s linear;
+}
+
+.upload-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 0.75rem;
+  font-weight: 300;
+  min-height: 1.2em;
+}
+
+#upload-popup-count {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.upload-popup-footer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#upload-cancel-btn, #upload-close-btn {
+  width: auto;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 400;
+  cursor: pointer;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+#upload-cancel-btn:hover, #upload-close-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.virus-file-list {
+    text-align: left;
+    max-height: 140px;
+    overflow-y: auto;
+    background: #1a1a1a;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.virus-file-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 0.95em;
+    color: #ddd;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.virus-file-item:last-child {
+    border-bottom: none;
+}
+
+.virus-file-item .material-icons {
+    color: #ff5555;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.virus-file-list::-webkit-scrollbar {
+    width: 8px;
+}
+.virus-file-list::-webkit-scrollbar-track {
+    background: #2a2a2a;
+    border-radius: 4px;
+}
+.virus-file-list::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+@media (max-width: 480px) {
+  .upload-popup-slide {
+    padding: 2rem 1.5rem;
+  }
+  .upload-popup {
+    max-width: calc(100% - 2rem);
+  }
+  .upload-popup-header h3 {
+    font-size: 1.3rem;
+  }
+}
+  </style>
+</head>
+<div id="preview-modal" class="preview-modal">
+  <div class="preview-header">
+    <div class="preview-file-info">
+      <img src="/static/icons/other.svg" alt="file icon" id="preview-file-icon" class="file-icon2">
+      <span id="preview-file-name">file_name_placeholder.txt</span>
+    </div>
+
+    <div class="preview-actions">
+      <button id="preview-download-btn" class="control-btn" title="Download">
+        <img src="/static/icons/download.svg" class="menu-icon" alt="Download">
+      </button>
+      <button id="preview-rename-btn" class="control-btn" title="Rename">
+        <img src="/static/icons/rename.svg" class="menu-icon" alt="Rename">
+      </button>
+      <button id="preview-move-btn" class="control-btn" title="Move to">
+        <img src="/static/icons/move.svg" class="menu-icon" alt="Move">
+      </button>
+      <button id="preview-share-btn" class="control-btn" title="Share">
+        <img src="/static/icons/share.svg" class="menu-icon" alt="Share">
+      </button>
+      <button id="preview-delete-btn" class="control-btn danger" title="Delete">
+        <img src="/static/icons/delete.svg" class="menu-icon" alt="Delete">
+      </button>
+    </div>
+
+    <span class="close-btn" onclick="closePreview()">×</span>
+  </div>
+
+  <div id="preview-content" class="preview-content"></div>
+</div>
+<script>
+function getFileTypeFromName(filename) {
+    if (!filename.includes('.')) return filename ? 'other' : 'folder';
+    const ext = filename.split('.').pop().toLowerCase();
+
+    // Images
+    const imageExts = ['jpg','jpeg','png','gif','bmp','svg','webp','tiff','ico'];
+    if (imageExts.includes(ext)) return 'image';
+    
+    // Videos
+    const videoExts = ['mp4','mov','avi','mkv','flv','wmv','webm','m4v','3gp'];
+    if (videoExts.includes(ext)) return 'video';
+    
+    // Audio
+    const audioExts = ['mp3','wav','ogg','flac','aac','m4a','wma'];
+    if (audioExts.includes(ext)) return 'audio';
+    
+    // Documents
+    const docExts = ['pdf','doc','docx','xls','xlsx','ppt','pptx','odt','ods','odp'];
+    if (docExts.includes(ext)) return 'document';
+    
+    // Text files
+    const textExts = ['txt','md','rtf','csv','log','ini','conf','json','xml','yaml','yml'];
+    if (textExts.includes(ext)) return 'text';
+    
+    // Archives - More comprehensive list
+    const archiveExts = ['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz', 'iso', 'dmg', 'zst', 'tgz'];
+    if (archiveExts.includes(ext)) return 'archive';
+    
+    // Code
+    const codeExts = ['html','htm','css','js','ts','jsx','tsx','py','java','cpp','c','h','php','sh','bat','ps1','go','rb','swift','kt'];
+    if (codeExts.includes(ext)) return 'code';
+    
+    return 'other';
+}
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('search-input');
+      const searchContainer = document.querySelector('.search-container');
+      
+      searchContainer.style.pointerEvents = 'auto';
+      searchContainer.style.zIndex = '1000';
+      
+      searchInput.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.focus();
+      });
+      
+      document.addEventListener('click', function(e) {
+        if (e.target.closest('.search-container')) {
+          e.stopPropagation();
+        }
+      });
+    });
+</script>
+<body>
+  <div class="loading-screen"><img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img"></div>
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+      </div>
+      <div class="mobile-menu-items">
+      <div class="mobile-menu-user">{{ username }} (Basic Plan)</div>
+      <a href="{{ url_for('mycloud') }}" class="mobile-menu-item">My Cloud</a>
+        <a href="{{ url_for('shared_files') }}" class="mobile-menu-item">My Shared Files</a>
+      <a href="{{ url_for('account') }}" class="mobile-menu-item active">Account</a>
+            <a href="{{ url_for('upgrade') }}" class="mobile-menu-item" >
+          Upgrade
+      </a>
+      <a href="{{ url_for('logout') }}" class="mobile-menu-item" style="border-bottom: none;">Logout</a>
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+  <div class="drag-overlay" id="drag-overlay">
+    <div class="drag-overlay-content">
+      <p>Drop to upload</p>
+      <div class="size-info" id="drag-size-info">0 B</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <header>
+        <div class="header-content">
+            <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+            
+<div class="search-container">
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path>
+    </svg>
+    <input type="text" class="search-bar" id="search-input" placeholder="Search files and folders...">
+</div>
+        <div class="hamburger-menu" id="hamburger-toggle">
+          <div class="hamburger-icon" id="hamburger-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="storage-meter">
+      <div class="storage-info">
+        <span>{{ used|filesizeformat }} of {{ quota|filesizeformat }} used</span>
+        <span>{{ "%.1f"|format(percent_used) }}%</span>
+      </div>
+      <div class="storage-bar">
+        <div class="storage-progress" style="width: {{ percent_used }}%"></div>
+      </div>
+    </div>
+
+    <div class="path-navigator">
+      {% if current_dir %}
+      <a href="{{ url_for('mycloud', path=parent_dir) }}" class="btn" id="parent-btn">
+        <img src="/static/icons/parent.svg" class="menu-icon" alt="Parent">
+        Parent
+      </a>
+      <span class="current-path ">{{ current_dir }}</span>
+      {% endif %}
+    </div>
+
+    <div class="toolbar">
+        <div class="start-menu">
+            <button type="button" id="start-btn" class="btn">
+                <img src="/static/icons/start.svg" class="menu-icon" alt="Start">
+                Start
+            </button>
+            <div class="menu-dropdown" id="start-menu-dropdown">
+                <button class="menu-item" id="upload-file-btn">
+                    <img src="/static/icons/upload-file.svg" class="menu-icon" alt="Upload File">
+                    Upload File
+                </button>
+                <button class="menu-item" id="upload-folder-btn">
+                    <img src="/static/icons/upload-folder.svg" class="menu-icon" alt="Upload Folder">
+                    Upload Folder
+                </button>
+                <button class="menu-item" id="create-folder-btn">
+                    <img src="/static/icons/create-folder.svg" class="menu-icon" alt="Create Folder">
+                    Create Folder
+                </button>
+            </div>
+        </div>
+        <form id="upload-form" method="post" enctype="multipart/form-data" class="upload-form" style="display: none;">
+            <input type="file" id="file-input" name="file" class="hidden" multiple />
+            <input type="file" id="folder-input" name="file" class="hidden" multiple webkitdirectory />
+            <input type="hidden" name="current_dir" value="{{ current_dir }}" />
+        </form>
+        <div class="upload-status">
+            <span id="upload-progress" class="status-text"></span>
+            <span id="upload-elapsed" class="status-text"></span>
+        </div>
+    </div>
+
+    <div class="sorting-bar">
+        <span class="sort-label">Sort by:</span>
+        <button class="sort-option" data-sort="name">
+            <span class="emoji"></span> Name
+        </button>
+        <button class="sort-option" data-sort="date">
+            <span class="emoji"></span> Date
+        </button>
+        <button class="sort-option" data-sort="size">
+            <span class="emoji"></span> Size
+        </button>
+        <button class="sort-option" id="filter-type">
+            <span class="emoji"></span> Type
+        </button>
+    </div>
+
+    <div class="filter-panel" id="filter-panel">
+        <div class="filter-header">
+            <h3></h3>
+            <button class="filter-close">&times;</button>
+        </div>
+<div class="filter-options">
+    <button class="filter-option" data-type="image"><i class="material-icons">image</i> Images</button>
+    <button class="filter-option" data-type="document"><i class="material-icons">description</i> Documents</button>
+    <button class="filter-option" data-type="audio"><i class="material-icons">audiotrack</i> Audio</button>
+    <button class="filter-option" data-type="video"><i class="material-icons">movie</i> Video</button>
+    <button class="filter-option" data-type="archive"><i class="material-icons">archive</i> Archives</button>
+    <button class="filter-option" data-type="code"><i class="material-icons">code</i> Code</button>
+    <button class="filter-option" data-type="folder"><i class="material-icons">folder</i> Folders</button>
+    <button class="filter-option" data-type="all"><i class="material-icons">all_inclusive</i> All Files</button>
+</div>
+    </div>
+    <div class="filter-overlay" id="filter-overlay"></div>
+
+    <div id="bulk-actions" class="bulk-actions">
+      <span id="bulk-actions-count"></span>
+      <div class="bulk-actions-buttons">
+        <button id="bulk-download" class="bulk-action-btn" title="Download Selected">
+          <img src="/static/icons/download.svg" class="menu-icon" alt="Download">
+        </button>
+        <button id="bulk-move" class="bulk-action-btn" title="Move Selected">
+          <img src="/static/icons/move.svg" class="menu-icon" alt="Move">
+        </button>
+        <button id="bulk-share" class="bulk-action-btn" title="Share Selected">
+          <img src="/static/icons/share.svg" class="menu-icon" alt="Share">
+        </button>
+        <button id="bulk-delete" class="bulk-action-btn danger" title="Delete Selected">
+          <img src="/static/icons/delete.svg" class="menu-icon" alt="Delete">
+        </button>
+      </div>
+    </div>
+
+    <div class="file-grid">
+  {% if not items %}
+  <div class="empty-state">
+    <div class="empty-state-content">
+      <img src="/static/icons/empty.svg" alt="Empty folder" class="empty-icon">
+      <h3 class="empty-title">Empty</h3>
+      <p class="empty-description">To upload files or folders, click on Start</p>
+    </div>
+  </div>
+  {% endif %}
+      {% for item in items %}
+      
+      <div class="file-card" data-is-dir="{{ 'true' if item.is_dir else 'false' }}" data-date="{{ item.date if item.date else '' }}">
+        <input type="checkbox" class="file-checkbox" data-path="{{ item.path }}" />
+        <div class="file-menu">
+          <button class="menu-trigger"></button>
+          <div class="menu-dropdown">
+            <a href="{% if item.is_dir %}{{ url_for('download_folder', folder_path=item.path) }}{% else %}{{ url_for('download', filename=item.path) }}{% endif %}" 
+               class="menu-item">
+               <img src="/static/icons/download.svg" class="menu-icon" alt="Download">
+               Download
+            </a>
+            <button class="menu-item rename-btn" data-path="{{ item.path }}" data-name="{{ item.name }}">
+                <img src="/static/icons/rename.svg" class="menu-icon" alt="Rename">
+                Rename
+            </button>
+            <button class="menu-item move-btn" data-path="{{ item.path }}" data-name="{{ item.name }}">
+                <img src="/static/icons/move.svg" class="menu-icon" alt="Move">
+                Move to
+            </button>
+            <button class="menu-item share-btn" data-path="{{ item.path }}" data-name="{{ item.name }}">
+                <img src="/static/icons/share.svg" class="menu-icon" alt="Share">
+                Share
+            </button>
+            <form action="{{ url_for('delete') }}" method="post" class="menu-form">
+                <input type="hidden" name="item_path" value="{{ item.path }}" />
+                <button type="submit" class="menu-item danger">
+                    <img src="/static/icons/delete.svg" class="menu-icon" alt="Delete">
+                    Delete
+                </button>
+            </form>
+</div>
+                    </div>
+{% if item.is_dir %}
+<div class="file-container" onclick="window.location='{{ url_for('mycloud', path=item.path) }}'">
+    <div class="file" data-file-name="{{ item.name }}">
+        <img src="/static/icons/folder.svg" alt="folder" class="file-icon">
+    </div>
+    <span class="file-name">{{ item.name }}</span>
+</div>
+{% else %}
+<div class="file-container" 
+     data-preview-url="{{ url_for('preview_file', filename=item.path) }}"
+     data-file-name="{{ item.name }}"
+     onclick="openPreview(this.dataset.previewUrl, getFileTypeFromName(this.dataset.fileName), '{{ item.path }}', '{{ item.name }}')">
+    <div class="file">
+        {% set icon = get_file_emoji(item.name) %}
+        {% if icon.endswith('.svg') or icon.endswith('.png') %}
+            <img src="{{ icon }}" alt="icon" class="file-icon">
+        {% else %}
+            <span class="material-icons">{{ get_file_emoji(item.name)}}</span>
+        {% endif %}
+    </div>
+    <span class="file-name">{{ item.name }}</span>
+</div>
+{% endif %}
+<span class="file-size">{{ item.size|filesizeformat }}</span>
+</div>
+{% endfor %}
+</div>
+
+
+    <div class="modal" id="rename-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rename Item</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="rename-form" method="post" action="{{ url_for('rename_item') }}">
+                    <input type="text" id="rename-input" class="input-field" name="new_name" required>
+                    <input type="hidden" id="rename-path" name="current_path">
+                    <input type="hidden" name="current_dir" value="{{ current_dir }}">
+                    <div class="modal-actions">
+                        <button type="button" class="btn modal-cancel">Cancel</button>
+                        <button type="submit" class="btn">Rename</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<div class="modal" id="conflict-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>File Conflict</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="conflict-message">An item with this name already exists. What would you like to do?</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn" id="conflict-upload-anyway">Upload Copy</button>
+                    <button type="button" class="btn success" id="conflict-replace">Replace</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="create-folder-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Folder</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="create-folder-form" method="post" action="{{ url_for('mkdir') }}">
+                    <input type="text" id="create-folder-input" class="input-field" name="dirname" placeholder="Enter folder name" required>
+                    <input type="hidden" name="current_dir" value="{{ current_dir }}">
+                    <div class="modal-actions">
+                        <button type="button" class="btn modal-cancel">Cancel</button>
+                        <button type="submit" class="btn">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="move-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Move Item</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="move-form" method="post" action="{{ url_for('move_item') }}">
+                    <select id="move-select" class="input-field" name="target_folder">
+                        <option value="ROOT" selected>CloudX (Home)</option>
+                        {% for item in items if item.is_dir and item.path != current_path %}
+                            <option value="{{ item.path }}">📁 {{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" id="move-path" name="current_path">
+                    <input type="hidden" name="current_dir" value="{{ current_dir }}">
+                    <div class="modal-actions">
+                        <button type="button" class="btn modal-cancel">Cancel</button>
+                        <button type="submit" class="btn">Move</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="share-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Item</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="share-form">
+                    <input type="hidden" id="share-path" name="path">
+                    <p id="share-modal-message">Generate a secure link to share your file.</p>
+                    
+                    <div class="share-options">
+                        <div class="share-option-item">
+                            <label>Access:</label>
+                            <div class="access-checkbox-group">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="access-preview" name="access_preview">
+                                    <label for="access-preview">Preview</label>
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="access-download" name="access_download">
+                                    <label for="access-download">Download</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="share-option-item">
+                            <label for="expiry-select">Link expires in:</label>
+                            <select id="expiry-select" name="expiry" class="input-field" disabled>
+                                <option value="1">1 hour</option>
+                                <option value="24" selected>1 day (24 hours)</option>
+                                <option value="168">1 week (7 days)</option>
+                                <option value="720">1 month (30 days)</option>
+                            </select>
+                             <label class="switch">
+                                <input type="checkbox" id="expiry-switch">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                         <div class="share-option-item">
+                            <label for="password-input">Password:</label>
+                            <div class="password-field-container">
+                                <input type="password" id="password-input" name="password" class="input-field" placeholder="Optional" disabled>
+                                <div class="password-toggle" onclick="toggleSharePassword()">
+                                    <svg id="share-eye-icon" viewBox="0 0 24 24">
+                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                                    </svg>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="password-switch">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="share-link-container" id="share-link-container" style="display:none;">
+                        <label>Your shareable link:</label>
+                        <div class="share-link">
+                            <input type="text" id="share-url" class="input-field" readonly>
+                            <button type="button" id="copy-link-btn" class="btn small">Copy</button>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button type="submit" class="btn" id="create-link-btn">Create Link</button>
+                        <button type="button" class="btn danger" id="delete-link-btn" style="display:none;">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="popup-overlay" id="upload-limit-overlay"></div>
+<div class="limit-popup" id="upload-limit-popup">
+  <button class="close-popup" aria-label="Close popup">&times;</button>
+  <div class="limit-popup-header"></div>
+  <h3>Upload Limit Exceeded</h3>
+  <p>Your selection (<span id="upload-limit-size"></span>) exceeds the {{ upload_limit|filesizeformat }} limit for the Basic plan. Upgrade to Plus or Pro for larger uploads.</p>
+  <a href="{{ url_for('upgrade') }}" class="btn">Upgrade Plan</a>
+</div>
+
+<div class="modal-overlay" id="modal-overlay"></div>
+  </div>
+
+<div class="popup-overlay" id="slideshow-popup-overlay"></div>
+<div class="slideshow-popup" id="slideshow-popup">
+  <button class="close-popup" aria-label="Close popup">×</button>
+  <div class="slideshow-container">
+    <div class="slide active" data-slide="1">
+      <p>Control access with link expiration dates</p>
+    </div>
+    <div class="slide" data-slide="2">
+      <p>Protect sensitive files with passwords</p>
+    </div>
+  </div>
+  <div class="slideshow-dots">
+    <span class="dot active" data-slide="1"></span>
+    <span class="dot" data-slide="2"></span>
+  </div>
+  <a href="{{ url_for('upgrade') }}" class="btn upgrade-btn">
+      <span>Upgrade Now</span>
+  </a>
+</div>
+
+  <div class="popup-overlay" id="large-folder-popup-overlay"></div>
+<div class="limit-popup" id="large-folder-popup">
+  <button class="close-popup" aria-label="Close popup">&times;</button>
+  <div class="limit-popup-header"></div>
+  <h3>Large Folder Uploaded</h3>
+  <p>For security reasons, folders over 200MB are not scanned. Your folder has been uploaded but not scanned for viruses.</p>
+  <button type="button" class="btn" id="large-folder-popup-close-btn">Continue</button>
+</div>
+
+<div class="popup-overlay" id="upload-limit-overlay"></div>
+<div class="popup-overlay" id="large-file-popup-overlay"></div>
+<div class="limit-popup" id="large-file-popup">
+  <button class="close-popup" aria-label="Close popup">&times;</button>
+  <div class="limit-popup-header"></div>
+  <h3>Large File Uploaded</h3>
+  <p>For security reasons, files over 50MB are not scanned. Your file has been uploaded but not scanned for viruses.</p>
+  <button type="button" class="btn" id="large-file-popup-close-btn">Continue</button>
+</div>
+
+<div class="upload-popup-overlay" id="upload-popup-overlay"></div>
+<div class="upload-popup" id="upload-popup">
+    <div class="upload-popup-content-wrapper">
+        <div class="upload-popup-slide" id="upload-progress-slide">
+            <div class="upload-popup-header">
+                <h3>Uploading Files</h3>
+                <p>Your files are being securely encrypted and uploaded.</p>
+            </div>
+            <div class="upload-progress-info">
+                <span class="upload-filename" id="upload-popup-filename"></span>
+                <div class="upload-progress-bar-container">
+                    <div class="upload-progress-bar" id="upload-popup-bar"></div>
+                </div>
+                <div class="upload-stats">
+                    <span id="upload-popup-details">
+                        <span id="upload-popup-percent">0%</span>
+                        (<span id="upload-popup-count">File 0 of 0</span>)
+                    </span>
+                    <span>
+                        <span id="upload-popup-speed">0 KB/s</span>
+                        -
+                        <span id="upload-popup-elapsed">0s</span>
+                    </span>
+                </div>
+            </div>
+            <div class="upload-popup-footer">
+                <button id="upload-cancel-btn">Cancel</button>
+            </div>
+        </div>
+
+        <div class="upload-popup-slide" id="upload-results-slide">
+            <div class="upload-popup-header">
+                <h3 id="upload-results-title">Scan Complete</h3>
+                <p id="upload-results-message">Some files were blocked.</p>
+            </div>
+            <div class="virus-file-list" id="upload-virus-list" style="display: none;">
+                </div>
+            <div class="upload-popup-footer">
+                <button id="upload-close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+// Constants from Server
+const UPLOAD_LIMIT = {{ upload_limit }};
+const BANDWIDTH_LIMIT = {{ bandwidth }};
+const USER_QUOTA_FORMATTED = "{{ quota|filesizeformat }}";
+
+// Global variables
+let currentUploadInfo = null; 
+let isDraggingFiles = false;
+let draggedItems = [];
+let isMobileDevice = window.innerWidth <= 768;
+let mobileMoveMode = false;
+let selectedForMove = [];
+let currentSort = 'name';
+let currentFilter = null;
+let isBulkMoving = false;
+let isUploadCancelled = false; // Flag for cancelling uploads
+
+// Refactored Slideshow variables
+let currentShareSlide = 1;
+let shareSlideInterval;
+const totalShareSlides = 2;
+
+// Helper functions
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function shouldShowStoragePopup(percent) {
+    const key = 'lastFullStorage_basic';
+    const previouslyFull = localStorage.getItem(key) === 'true';
+
+    if (percent >= 100 && !previouslyFull) {
+        localStorage.setItem(key, 'true');
+        return true;
+    }
+
+    if (percent < 100 && previouslyFull) {
+        localStorage.setItem(key, 'false');
+    }
+
+    return false;
+}
+
+// Modal functions
+const modals = {
+    rename: document.getElementById('rename-modal'),
+    move: document.getElementById('move-modal'),
+    share: document.getElementById('share-modal'),
+    createFolder: document.getElementById('create-folder-modal'),
+    conflict: document.getElementById('conflict-modal'),
+    overlay: document.getElementById('modal-overlay')
+};
+
+function openModal(modalName) {
+    closeModals();
+    if (modals[modalName]) {
+        modals[modalName].classList.add('active');
+        modals.overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeModals() {
+    if (isBulkMoving) {
+        isBulkMoving = false;
+    }
+    for (const modalKey in modals) {
+        const modal = modals[modalKey];
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+    if (modals.overlay) {
+        modals.overlay.classList.remove('active');
+    }
+    document.body.style.overflow = '';
+}
+
+// Share Slideshow Functions
+function showShareSlide(n) {
+    const slides = document.querySelectorAll('#slideshow-popup .slide');
+    const dots = document.querySelectorAll('#slideshow-popup .dot');
+    
+    currentShareSlide = n > totalShareSlides ? 1 : n < 1 ? totalShareSlides : n;
+    
+    slides.forEach(slide => slide.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    document.querySelector(`#slideshow-popup .slide[data-slide="${currentShareSlide}"]`).classList.add('active');
+    document.querySelector(`#slideshow-popup .dot[data-slide="${currentShareSlide}"]`).classList.add('active');
+}
+
+function nextShareSlide() {
+    showShareSlide(currentShareSlide + 1);
+}
+
+function startShareSlideshow() {
+    if (shareSlideInterval) clearInterval(shareSlideInterval);
+    shareSlideInterval = setInterval(nextShareSlide, 3000);
+}
+
+function showShareSlideshowPopup(slideNumber = 1) {
+    const popup = document.getElementById('slideshow-popup');
+    const overlay = document.getElementById('slideshow-popup-overlay');
+    
+    popup.classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    currentShareSlide = slideNumber;
+    showShareSlide(currentShareSlide);
+    startShareSlideshow();
+}
+
+function closeShareSlideshowPopup() {
+    const popup = document.getElementById('slideshow-popup');
+    const overlay = document.getElementById('slideshow-popup-overlay');
+    
+    popup.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    
+    if (shareSlideInterval) clearInterval(shareSlideInterval);
+}
+
+// Popup functions
+function showStorageFullPopup() {
+    const popup = document.createElement('div');
+    popup.className = 'storage-full-popup';
+    popup.innerHTML = `
+        <div class="storage-full-content">
+            <button class="close-popup" aria-label="Close popup">×</button>
+            <div class="storage-full-header"></div>
+            <h3>Storage Full</h3>
+            <p>You've reached your ${USER_QUOTA_FORMATTED} storage limit. Please upgrade for more storage.</p>
+            <a href="{{ url_for('upgrade') }}" class="btn">Upgrade Plan</a>
+        </div>
+    `;
+    document.body.appendChild(popup);
+    document.body.style.overflow = 'hidden';
+
+    const closeBtn = popup.querySelector('.close-popup');
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(popup);
+        document.body.style.overflow = '';
+    });
+}
+
+function showUploadLimitPopup(totalUploadSize) {
+    document.getElementById('upload-limit-size').textContent = formatBytes(totalUploadSize);
+    const popup = document.getElementById('upload-limit-popup');
+    const overlay = document.getElementById('upload-limit-overlay');
+    popup.classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    const closeBtn = popup.querySelector('.close-popup');
+    const closeAndRemove = () => {
+        popup.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        closeBtn.removeEventListener('click', closeAndRemove);
+        overlay.removeEventListener('click', closeAndRemove);
+    };
+    closeBtn.addEventListener('click', closeAndRemove);
+    overlay.addEventListener('click', closeAndRemove);
+}
+
+
+// --- MODIFIED: Upload Popup Functions ---
+const uploadPopup = {
+    overlay: document.getElementById('upload-popup-overlay'),
+    popup: document.getElementById('upload-popup'),
+    wrapper: document.querySelector('.upload-popup-content-wrapper'),
+    filename: document.getElementById('upload-popup-filename'),
+    bar: document.getElementById('upload-popup-bar'),
+    percent: document.getElementById('upload-popup-percent'),
+    count: document.getElementById('upload-popup-count'),
+    speed: document.getElementById('upload-popup-speed'),
+    elapsed: document.getElementById('upload-popup-elapsed'),
+    cancelBtn: document.getElementById('upload-cancel-btn'),
+    closeBtn: document.getElementById('upload-close-btn'),
+    resultsTitle: document.getElementById('upload-results-title'),
+    resultsMessage: document.getElementById('upload-results-message'),
+    virusList: document.getElementById('upload-virus-list')
+};
+
+function showUploadPopup() {
+    isUploadCancelled = false;
+    uploadPopup.filename.textContent = 'Preparing upload...';
+    uploadPopup.bar.style.width = '0%';
+    uploadPopup.percent.textContent = '0%';
+    uploadPopup.count.textContent = 'File 0 of 0';
+    uploadPopup.speed.textContent = '...';
+    uploadPopup.elapsed.textContent = '...';
+    uploadPopup.overlay.classList.add('active');
+    uploadPopup.popup.classList.add('active');
+}
+
+function hideUploadPopup() {
+    uploadPopup.overlay.classList.remove('active');
+    uploadPopup.popup.classList.remove('active');
+    // Reset slide for the next upload after the animation finishes
+    setTimeout(() => {
+        uploadPopup.wrapper.style.transform = 'translateX(0%)';
+    }, 400);
+}
+
+function updateUploadPopup({ filename, percent, fileCount, speed, elapsed }) {
+    uploadPopup.filename.textContent = filename;
+    uploadPopup.bar.style.width = `${percent}%`;
+    uploadPopup.percent.textContent = `${percent}%`;
+    uploadPopup.count.textContent = fileCount;
+    uploadPopup.speed.textContent = speed;
+    uploadPopup.elapsed.textContent = elapsed;
+}
+
+function showUploadResults(maliciousFiles = []) {
+    if (maliciousFiles.length > 0) {
+        uploadPopup.resultsTitle.textContent = 'Scan Complete';
+        uploadPopup.resultsMessage.textContent = `Upload finished, but our scanner blocked ${maliciousFiles.length} potential threat(s):`;
+        uploadPopup.virusList.innerHTML = '';
+        maliciousFiles.forEach(filename => {
+            const item = document.createElement('div');
+            item.className = 'virus-file-item';
+            item.innerHTML = `<i class="material-icons">dangerous</i> <span>${filename}</span>`;
+            uploadPopup.virusList.appendChild(item);
+        });
+        uploadPopup.virusList.style.display = 'block';
+    } else {
+        // This case is for future use, as successful uploads currently close automatically.
+        uploadPopup.resultsTitle.textContent = 'Upload Complete';
+        uploadPopup.resultsMessage.textContent = 'All files were uploaded successfully.';
+        uploadPopup.virusList.style.display = 'none';
+    }
+    // Trigger the slide animation
+    uploadPopup.wrapper.style.transform = 'translateX(-50%)';
+}
+
+// Upload functions
+function resetUploadStatus() {
+    const progressSpan = document.getElementById("upload-progress");
+    const elapsedSpan = document.getElementById("upload-elapsed");
+    progressSpan.textContent = "";
+    elapsedSpan.textContent = "";
+}
+
+function showConflictModal(name, isFolder = false) {
+    return new Promise((resolve) => {
+        const modal = modals.conflict;
+        const message = document.getElementById('conflict-message');
+        const replaceBtn = document.getElementById('conflict-replace');
+        const uploadAnywayBtn = document.getElementById('conflict-upload-anyway');
+        const closeBtn = modal.querySelector('.modal-close');
+
+        if (isFolder) {
+            message.innerHTML = `A folder named <strong>"${name}"</strong> already exists. Replacing it will delete its current contents. What would you like to do?`;
+        } else {
+            message.innerHTML = `An item named <strong>"${name}"</strong> already exists. What would you like to do?`;
+        }
+
+        const newReplaceBtn = replaceBtn.cloneNode(true);
+        replaceBtn.parentNode.replaceChild(newReplaceBtn, replaceBtn);
+        const newUploadAnywayBtn = uploadAnywayBtn.cloneNode(true);
+        uploadAnywayBtn.parentNode.replaceChild(newUploadAnywayBtn, uploadAnywayBtn);
+        const newCloseBtn = closeBtn.cloneNode(true);
+        closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
+        const cleanupAndResolve = (choice) => {
+            closeModals();
+            resolve(choice);
+        };
+
+        newReplaceBtn.addEventListener('click', () => cleanupAndResolve('replace'));
+        newUploadAnywayBtn.addEventListener('click', () => cleanupAndResolve('upload_anyway'));
+        newCloseBtn.addEventListener('click', () => cleanupAndResolve('cancel'));
+
+        openModal('conflict');
+    });
+}
+
+async function handleUpload(e) {
+    const filesOrItems = e.target.files;
+    if (!filesOrItems.length) return;
+
+    resetUploadStatus(); // Clear old toolbar status
+    showUploadPopup(); // Show the new popup
+
+    let uploadItems = [];
+    if (filesOrItems[0] instanceof File) {
+        uploadItems = Array.from(filesOrItems).map(f => ({ file: f, path: f.webkitRelativePath || f.name }));
+    } else {
+        uploadItems = filesOrItems;
+    }
+
+    const percentUsed = parseFloat("{{ percent_used }}");
+    if (percentUsed >= 100) {
+        showStorageFullPopup();
+        e.target.value = '';
+        hideUploadPopup();
+        return;
+    }
+
+    const totalUploadSize = uploadItems.reduce((total, item) => total + item.file.size, 0);
+    if (totalUploadSize > UPLOAD_LIMIT) {
+        showUploadLimitPopup(totalUploadSize);
+        e.target.value = '';
+        hideUploadPopup();
+        return;
+    }
+
+    const isFolder = uploadItems.length > 0 && uploadItems[0].path.includes("/");
+    let folderConflictDecision = null;
+    let newFolderNameForUpload = null;
+    let maliciousFiles = [];
+    let successfulUploads = false;
+
+    const startTime = Date.now();
+    const CHUNK_SIZE = 8 * 1024 * 1024;
+    const totalFiles = uploadItems.length;
+    let cumulativeUploadedSize = 0;
+
+    try {
+        for (let i = 0; i < totalFiles; i++) {
+            if (isUploadCancelled) break;
+            const item = uploadItems[i];
+            const file = item.file;
+            const relativePath = item.path;
+            const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+            let overwriteAction = null;
+            let fileFailed = false;
+
+            currentUploadInfo = {
+                filename: file.name,
+                current_dir: "{{ current_dir }}",
+                relativePath: isFolder ? relativePath : null
+            };
+
+            for (let chunkNumber = 0; chunkNumber < totalChunks; chunkNumber++) {
+                if (isUploadCancelled) break;
+                const chunk = file.slice(chunkNumber * CHUNK_SIZE, (chunkNumber + 1) * CHUNK_SIZE);
+                const formData = new FormData();
+                formData.append("file", chunk);
+                formData.append("current_dir", "{{ current_dir }}");
+                formData.append("filename", file.name);
+                formData.append("chunkNumber", chunkNumber);
+                formData.append("totalChunks", totalChunks);
+
+                if (isFolder) {
+                    formData.append("relative_path", relativePath);
+                    if (i === 0) formData.append("is_first_file_of_batch", "true");
+                    if (folderConflictDecision) formData.append("folder_conflict_action", folderConflictDecision);
+                    if (newFolderNameForUpload) formData.append("new_folder_name", newFolderNameForUpload);
+                }
+
+                if (overwriteAction) formData.append("overwrite_action", overwriteAction);
+
+                const response = await fetch("{{ url_for('upload') }}", { method: "POST", body: formData });
+                const result = await response.json();
+
+                // --- MODIFICATION START ---
+                // The logic for handling !result.success has been restructured.
+                if (!result.success) {
+                    if (result.message === 'folder_exists' || result.message === 'file_exists') {
+                        // Hide the upload popup ONLY when we need to show the conflict modal
+                        hideUploadPopup();
+                        const isFolderConflict = result.message === 'folder_exists';
+                        const conflictName = isFolderConflict ? result.foldername : result.filename;
+                        const userChoice = await showConflictModal(conflictName, isFolderConflict);
+
+                        if (userChoice === 'cancel') throw new Error('Upload cancelled by user.');
+                        
+                        if (isFolderConflict) {
+                            folderConflictDecision = userChoice;
+                            if (userChoice === 'upload_anyway') newFolderNameForUpload = result.suggestion;
+                        } else {
+                            overwriteAction = userChoice;
+                        }
+                        
+                        // Decrement chunkNumber to retry this chunk with the new decision
+                        chunkNumber--; 
+                        showUploadPopup(); // Re-show the upload popup to continue
+                        continue; // Continue to the next iteration of the chunk loop
+                    
+                    } else if (result.message === 'virus_detected') {
+                        // For viruses, we DO NOT hide the popup. We just record the file and break.
+                        maliciousFiles.push(result.filename || file.name);
+                        fileFailed = true;
+                        break; // Break from this file's chunk loop
+                    
+                    } else if (result.message === 'storage_full') {
+                         hideUploadPopup();
+                         showStorageFullPopup();
+                         throw new Error('Storage is full.');
+                    
+                    } else {
+                        // For any other generic error, hide the popup and alert the user.
+                        hideUploadPopup();
+                        alert(`An unexpected error occurred: ${result.message}`);
+                        throw new Error(result.message || 'Upload failed');
+                    }
+                }
+                // --- MODIFICATION END ---
+
+                const uploadProgressSize = (chunkNumber === 0 && overwriteAction) ? 0 : chunk.size;
+                cumulativeUploadedSize += uploadProgressSize;
+                const totalProgress = totalUploadSize > 0 ? Math.round((cumulativeUploadedSize / totalUploadSize) * 100) : 0;
+                const elapsedTimeMs = Date.now() - startTime;
+                const elapsedTimeSeconds = Math.round(elapsedTimeMs / 1000);
+                const uploadSpeedMBps = elapsedTimeMs > 0 ? (cumulativeUploadedSize / (1024 * 1024)) / (elapsedTimeMs / 1000) : 0;
+                const minutes = Math.floor(elapsedTimeSeconds / 60);
+                const seconds = elapsedTimeSeconds % 60;
+                let timeString = (minutes > 0) ? `${minutes}m ${seconds}s` : `${seconds}s`;
+                let speedString = uploadSpeedMBps >= 1 ? `${uploadSpeedMBps.toFixed(1)} MB/s` : `${(uploadSpeedMBps * 1024).toFixed(0)} KB/s`;
+
+                updateUploadPopup({
+                    filename: file.name,
+                    percent: totalProgress,
+                    fileCount: `File ${i + 1} of ${totalFiles}`,
+                    speed: speedString,
+                    elapsed: timeString
+                });
+            }
+            if (isUploadCancelled) break;
+            if (!fileFailed) successfulUploads = true;
+        }
+
+    } catch (err) {
+        // Errors are now handled more gracefully inside the loop
+        console.error("Upload process terminated:", err.message);
+    } finally {
+        currentUploadInfo = null;
+        if (isUploadCancelled) {
+            if (currentUploadInfo) {
+                const data = JSON.stringify(currentUploadInfo);
+                navigator.sendBeacon("{{ url_for('cancel_upload') }}", new Blob([data], {type: 'application/json'}));
+            }
+            hideUploadPopup();
+        } else if (maliciousFiles.length > 0) {
+             // Ensure progress shows 100% before showing results
+            const lastFile = uploadItems.length > 0 ? uploadItems[uploadItems.length - 1].file.name : 'Completed';
+            const elapsedTimeMs = Date.now() - startTime;
+            const elapsedTimeSeconds = Math.round(elapsedTimeMs / 1000);
+            const minutes = Math.floor(elapsedTimeSeconds / 60);
+            const seconds = elapsedTimeSeconds % 60;
+            updateUploadPopup({
+                filename: lastFile,
+                percent: 100,
+                fileCount: `File ${totalFiles} of ${totalFiles}`,
+                speed: "Done",
+                elapsed: `${minutes}m ${seconds}s`
+            });
+            setTimeout(() => {
+                showUploadResults(maliciousFiles);
+            }, 500); // Short delay for user to see 100%
+        } else if (successfulUploads) {
+            const lastFile = uploadItems.length > 0 ? uploadItems[uploadItems.length - 1].file.name : 'Completed';
+            const elapsedTimeMs = Date.now() - startTime;
+            const elapsedTimeSeconds = Math.round(elapsedTimeMs / 1000);
+            const minutes = Math.floor(elapsedTimeSeconds / 60);
+            const seconds = elapsedTimeSeconds % 60;
+            updateUploadPopup({
+                filename: lastFile,
+                percent: 100,
+                fileCount: `File ${totalFiles} of ${totalFiles}`,
+                speed: "Done",
+                elapsed: `${minutes}m ${seconds}s`
+            });
+
+            setTimeout(() => {
+                hideUploadPopup();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            }, 1500);
+        } else {
+            // This case handles no successful uploads (e.g., all files failed virus scan)
+            // or if the user cancels during a conflict modal.
+            if (!maliciousFiles.length) {
+                 hideUploadPopup();
+            }
+        }
+    }
+}
+
+
+// Drag and drop functions
+async function collectFilesFromDrop(items) {
+    const collectedItems = [];
+    const entries = Array.from(items).map(item => item.webkitGetAsEntry());
+
+    async function scanFiles(entry) {
+        if (entry.isFile) {
+            return new Promise((resolve, reject) => {
+                entry.file(file => {
+                    const relativePath = entry.fullPath.startsWith('/') 
+                        ? entry.fullPath.substring(1) 
+                        : entry.fullPath;
+                    // Push an object containing both the file and its path
+                    collectedItems.push({ file: file, path: relativePath });
+                    resolve();
+                }, reject);
+            });
+        } else if (entry.isDirectory) {
+            const reader = entry.createReader();
+            const entries = await new Promise((resolve, reject) => {
+                reader.readEntries(resolve, reject);
+            });
+            // Recursively scan all entries in the directory
+            await Promise.all(entries.map(scanFiles));
+        }
+    }
+
+    await Promise.all(entries.map(scanFiles));
+    return collectedItems;
+}
+
+function setupDragAndDrop() {
+    const dragOverlay = document.getElementById('drag-overlay');
+    const dragSizeInfo = document.getElementById('drag-size-info');
+    let dragTimeout;
+
+    document.body.addEventListener('dragenter', (e) => {
+        if (isDraggingFiles) return;
+        
+        e.preventDefault();
+        clearTimeout(dragTimeout);
+        dragOverlay.classList.add('visible');
+        dragSizeInfo.textContent = 'Analyzing files...';
+    });
+
+    document.body.addEventListener('dragover', (e) => {
+        if (isDraggingFiles) return;
+        e.preventDefault();
+    });
+
+    document.body.addEventListener('dragleave', (e) => {
+        if (isDraggingFiles) return;
+        
+        if (e.relatedTarget === null || e.relatedTarget.nodeName === "HTML") {
+            dragTimeout = setTimeout(() => {
+                dragOverlay.classList.remove('visible');
+                dragOverlay.classList.remove('limit-exceeded');
+            }, 50);
+        }
+    });
+
+    document.body.addEventListener("drop", async (e) => {
+        if (isDraggingFiles) return;
+        
+        e.preventDefault();
+        dragOverlay.classList.remove('visible');
+        dragOverlay.classList.remove('limit-exceeded');
+
+        const percentUsed = parseFloat("{{ percent_used }}");
+        if (percentUsed >= 100) {
+            showStorageFullPopup();
+            return;
+        }
+
+        const dt = e.dataTransfer;
+        
+        if (dt.items && dt.items.length > 0) {
+            const files = await collectFilesFromDrop(dt.items);
+            const totalUploadSize = files.reduce((total, file) => total + file.size, 0);
+            
+            if (totalUploadSize > UPLOAD_LIMIT) {
+                showUploadLimitPopup(totalUploadSize);
+                return;
+            }
+            
+            const mockEvent = { target: { files } };
+            handleUpload(mockEvent);
+        } else if (dt.files && dt.files.length > 0) {
+            const totalUploadSize = Array.from(dt.files).reduce((total, file) => total + file.size, 0);
+            
+            if (totalUploadSize > UPLOAD_LIMIT) {
+                showUploadLimitPopup(totalUploadSize);
+                return;
+            }
+            
+            const mockEvent = { target: { files: dt.files } };
+            handleUpload(mockEvent);
+        }
+    });
+}
+
+// File moving functionality
+function isValidDropTarget(targetPath) {
+    return !draggedItems.some(item => {
+        return targetPath === item.path || targetPath.startsWith(item.path + '/');
+    });
+}
+
+function moveMultipleItems(sourcePaths, targetPath) {
+    const currentDir = "{{ current_dir }}";
+    
+    const movePromises = sourcePaths.map(sourcePath => {
+        return fetch("{{ url_for('move_item') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `current_path=${encodeURIComponent(sourcePath)}&target_folder=${encodeURIComponent(targetPath)}&current_dir=${encodeURIComponent(currentDir)}`
+        });
+    });
+
+    Promise.allSettled(movePromises)
+        .finally(() => {
+            window.location.reload();
+        });
+}
+function enterMobileMoveMode(initiatingCard) {
+    mobileMoveMode = true;
+    
+    const selectedCheckboxes = document.querySelectorAll('.file-checkbox:checked');
+    
+    if (selectedCheckboxes.length > 0) {
+        selectedForMove = Array.from(selectedCheckboxes).map(cb => cb.dataset.path);
+    } else {
+        selectedForMove = [initiatingCard.querySelector('.file-checkbox').dataset.path];
+        initiatingCard.querySelector('.file-checkbox').checked = true;
+        initiatingCard.classList.add('selected');
+    }
+    
+    const mobileIndicator = document.createElement('div');
+    mobileIndicator.className = 'mobile-move-mode';
+    mobileIndicator.innerHTML = `
+        <span>Move Mode: Select a folder to move ${selectedForMove.length} item(s)</span>
+        <button class="mobile-move-cancel" onclick="exitMobileMoveMode()">×</button>
+    `;
+    document.body.appendChild(mobileIndicator);
+    
+    document.querySelectorAll('.file-card').forEach(card => {
+        if (card.dataset.isDir === 'true') {
+            card.classList.add('drop-target');
+        }
+    });
+}
+
+function exitMobileMoveMode() {
+    mobileMoveMode = false;
+    selectedForMove = [];
+    
+    const indicator = document.querySelector('.mobile-move-mode');
+    if (indicator) {
+        indicator.remove();
+    }
+    
+    document.querySelectorAll('.file-card').forEach(card => {
+        card.classList.remove('drop-target', 'touch-selected');
+    });
+}
+
+function setupEnhancedDragAndDrop() {
+    document.querySelectorAll('.file-card').forEach(card => {
+        const checkbox = card.querySelector('.file-checkbox');
+        const path = checkbox.dataset.path;
+        
+        card.setAttribute('draggable', 'true');
+        
+        card.addEventListener('dragstart', (e) => {
+            if (isMobileDevice || e.target.closest('.move-btn')) {
+                e.preventDefault();
+                return;
+            }
+            
+            isDraggingFiles = true;
+            const selectedCheckboxes = document.querySelectorAll('.file-checkbox:checked');
+            
+            if (selectedCheckboxes.length > 0) {
+                draggedItems = Array.from(selectedCheckboxes).map(cb => ({
+                    path: cb.dataset.path,
+                    name: cb.dataset.path.split('/').pop(),
+                    element: cb.closest('.file-card')
+                }));
+            } else {
+                draggedItems = [{
+                    path: path,
+                    name: path.split('/').pop(),
+                    element: card
+                }];
+            }
+            
+            e.dataTransfer.setData('text/plain', JSON.stringify(draggedItems.map(item => item.path)));
+            e.dataTransfer.effectAllowed = 'move';
+            
+            draggedItems.forEach(item => {
+                item.element.classList.add('dragging');
+            });
+        });
+        
+        card.addEventListener('dragend', () => {
+            isDraggingFiles = false;
+            draggedItems.forEach(item => {
+                item.element.classList.remove('dragging');
+            });
+            draggedItems = [];
+        });
+
+        // Mobile touch support
+        let touchStartTime = 0;
+        let touchStartPos = { x: 0, y: 0 };
+        
+        card.addEventListener('touchstart', (e) => {
+            if (mobileMoveMode) {
+                if (card.dataset.isDir === 'true') {
+                    const targetPath = checkbox.dataset.path;
+                    const targetName = targetPath.split('/').pop();
+                    
+                    if (selectedForMove.length === 0) return;
+                    
+                    const message = selectedForMove.length === 1 
+                        ? `Move "${selectedForMove[0].split('/').pop()}" to "${targetName}"?`
+                        : `Move ${selectedForMove.length} items to "${targetName}"?`;
+                    
+                    if (confirm(message)) {
+                        moveMultipleItems(selectedForMove, targetPath);
+                        exitMobileMoveMode();
+                    }
+                }
+                return;
+            }
+            
+            touchStartTime = Date.now();
+            touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        });
+        
+        card.addEventListener('touchend', (e) => {
+            if (mobileMoveMode) return;
+            
+            const touchDuration = Date.now() - touchStartTime;
+            const touchEndPos = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY };
+            const distance = Math.sqrt(
+                Math.pow(touchEndPos.x - touchStartPos.x, 2) + 
+                Math.pow(touchEndPos.y - touchStartPos.y, 2)
+            );
+            
+            if (touchDuration > 500 && distance < 10) {
+                e.preventDefault();
+                enterMobileMoveMode(card);
+            }
+        });
+    });
+
+    const fileGrid = document.querySelector('.file-grid');
+    
+    fileGrid.addEventListener('dragover', (e) => {
+        if (!isDraggingFiles) return;
+        
+        const targetCard = e.target.closest('.file-card');
+        if (targetCard && targetCard.dataset.isDir === 'true') {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            const targetPath = targetCard.querySelector('.file-checkbox').dataset.path;
+            const isValidTarget = isValidDropTarget(targetPath);
+            
+            document.querySelectorAll('.file-card.drop-target').forEach(card => {
+                card.classList.remove('drop-target', 'invalid');
+            });
+            
+            targetCard.classList.add('drop-target');
+            if (!isValidTarget) {
+                targetCard.classList.add('invalid');
+            }
+        }
+    });
+    
+    fileGrid.addEventListener('dragleave', (e) => {
+        if (!isDraggingFiles) return;
+        
+        const targetCard = e.target.closest('.file-card');
+        if (targetCard && targetCard.dataset.isDir === 'true') {
+            targetCard.classList.remove('drop-target', 'invalid');
+        }
+    });
+    
+fileGrid.addEventListener('drop', (e) => {
+    if (!isDraggingFiles) return;
+    e.preventDefault();
+
+    const targetCard = e.target.closest('.file-card');
+
+    let droppedPaths = [];
+    try {
+        droppedPaths = JSON.parse(e.dataTransfer.getData('text/plain'));
+    } catch (err) {
+        console.warn('Failed to parse dragged paths:', err);
+    }
+
+    if (targetCard && targetCard.dataset.isDir === 'true') {
+        targetCard.classList.remove('drop-target', 'invalid');
+        const targetPath = targetCard.querySelector('.file-checkbox').dataset.path;
+        const targetName = targetPath.split('/').pop();
+
+        const isValid = droppedPaths.every(path => {
+            return targetPath !== path && !targetPath.startsWith(path + '/');
+        });
+
+        if (!isValid) {
+            alert('Cannot move item into itself or its subdirectories');
+            return;
+        }
+
+        const message = droppedPaths.length === 1
+            ? `Move "${droppedPaths[0].split('/').pop()}" to "${targetName}"?`
+            : `Move ${droppedPaths.length} items to "${targetName}"?`;
+
+        if (confirm(message)) {
+            moveMultipleItems(droppedPaths, targetPath);
+        }
+    }
+});
+}
+
+// File selection functionality
+function setupFileSelection() {
+    const fileGrid = document.querySelector('.file-grid');
+    const bulkActions = document.getElementById('bulk-actions');
+    let isSelecting = false;
+    let selectionStart = { x: 0, y: 0 };
+    let selectionEnd = { x: 0, y: 0 };
+    let selectionRect = null;
+    let scrollInterval = null;
+    let selectedFiles = new Set();
+    let gridRect = null;
+
+    selectionRect = document.createElement('div');
+    selectionRect.className = 'selection-rectangle';
+    document.body.appendChild(selectionRect);
+
+    function updateGridRect() {
+        if (fileGrid) {
+            gridRect = fileGrid.getBoundingClientRect();
+        }
+    }
+
+    function clearAllSelections() {
+        selectedFiles.clear();
+        document.querySelectorAll('.file-checkbox').forEach(checkbox => {
+            checkbox.checked = false;
+            checkbox.closest('.file-card')?.classList.remove('selected');
+        });
+        updateBulkActionsVisibility();
+    }
+
+    function updateBulkActionsVisibility() {
+        const selectedCount = document.querySelectorAll(".file-checkbox:checked").length;
+        const countSpan = document.getElementById('bulk-actions-count');
+
+        if (bulkActions) {
+            bulkActions.classList.toggle('visible', selectedCount > 0);
+        }
+
+        if (countSpan) {
+            if (selectedCount > 0) {
+                countSpan.textContent = `${selectedCount} item${selectedCount > 1 ? 's' : ''} selected`;
+            } else {
+                countSpan.textContent = '';
+            }
+        }
+    }
+
+    function isInsideGrid(x, y) {
+        return gridRect && x >= gridRect.left && x <= gridRect.right && 
+               y >= gridRect.top && y <= gridRect.bottom;
+    }
+
+    function updateSelectionRect() {
+        const left = Math.min(selectionStart.x, selectionEnd.x);
+        const top = Math.min(selectionStart.y, selectionEnd.y);
+        const width = Math.abs(selectionEnd.x - selectionStart.x);
+        const height = Math.abs(selectionEnd.y - selectionStart.y);
+
+        selectionRect.style.left = `${left}px`;
+        selectionRect.style.top = `${top}px`;
+        selectionRect.style.width = `${width}px`;
+        selectionRect.style.height = `${height}px`;
+    }
+
+    function updateSelectedFiles(addToSelection = false) {
+        const rect = {
+            left: Math.min(selectionStart.x, selectionEnd.x),
+            top: Math.min(selectionStart.y, selectionEnd.y),
+            right: Math.max(selectionStart.x, selectionEnd.x),
+            bottom: Math.max(selectionStart.y, selectionEnd.y)
+        };
+
+        document.querySelectorAll('.file-card').forEach(card => {
+            const cardRect = card.getBoundingClientRect();
+            const isIntersecting = !(
+                rect.right < cardRect.left || 
+                rect.left > cardRect.right || 
+                rect.bottom < cardRect.top || 
+                rect.top > cardRect.bottom
+            );
+
+            const checkbox = card.querySelector('.file-checkbox');
+            if (checkbox && isIntersecting) {
+                selectedFiles.add(checkbox.dataset.path);
+                checkbox.checked = true;
+                card.classList.add('selected');
+            } else if (!addToSelection && checkbox) {
+                selectedFiles.delete(checkbox.dataset.path);
+                checkbox.checked = false;
+                card.classList.remove('selected');
+            }
+        });
+        
+        updateBulkActionsVisibility();
+    }
+
+    function handleAutoScroll(e) {
+        const edgeThreshold = 50;
+        const scrollSpeed = 20;
+        const scrollDirection = { x: 0, y: 0 };
+        
+        if (e.clientY < window.innerHeight * 0.1) scrollDirection.y = -1;
+        if (e.clientY > window.innerHeight * 0.9) scrollDirection.y = 1;
+        if (e.clientX < window.innerWidth * 0.1) scrollDirection.x = -1;
+        if (e.clientX > window.innerWidth * 0.9) scrollDirection.x = 1;
+        
+        if (scrollDirection.x !== 0 || scrollDirection.y !== 0) {
+            if (!scrollInterval) {
+                scrollInterval = setInterval(() => {
+                    const prevScrollX = window.scrollX;
+                    const prevScrollY = window.scrollY;
+                    
+                    window.scrollBy(scrollDirection.x * scrollSpeed, scrollDirection.y * scrollSpeed);
+                    
+                    const deltaX = window.scrollX - prevScrollX;
+                    const deltaY = window.scrollY - prevScrollY;
+                    
+                    selectionStart.x -= deltaX;
+                    selectionStart.y -= deltaY;
+                    
+                    updateGridRect();
+                    updateSelectionRect();
+                    updateSelectedFiles(true);
+                }, 16);
+            }
+        } else if (scrollInterval) {
+            clearInterval(scrollInterval);
+            scrollInterval = null;
+        }
+    }
+
+    function endSelection() {
+        if (scrollInterval) {
+            clearInterval(scrollInterval);
+            scrollInterval = null;
+        }
+        isSelecting = false;
+        selectionRect.style.display = 'none';
+        updateBulkActionsVisibility();
+    }
+
+    // Initialize
+    clearAllSelections();
+    updateGridRect();
+
+    // Event listeners
+    window.addEventListener('resize', updateGridRect);
+    window.addEventListener('scroll', updateGridRect);
+
+document.addEventListener('mousedown', (e) => {
+    if (!fileGrid) return;
+
+    if (document.querySelector('.modal.active, .popup-overlay.active')) {
+        return;
+    }
+
+    updateGridRect();
+
+    if (e.target.closest('.file-checkbox') || 
+        e.target.closest('.file-menu') ||
+        e.target.closest('.btn') ||
+        e.target.closest('a') ||
+        e.target.closest('#bulk-actions')) {
+        return;
+    }
+
+    const isInsideGridArea = isInsideGrid(e.clientX, e.clientY);
+
+    if (!isInsideGridArea) {
+        clearAllSelections();
+        return;
+    }
+
+    const clickedCard = e.target.closest('.file-card');
+    if (!clickedCard) {
+        if (window.innerWidth <= 768) {
+            clearAllSelections();
+            return;
+        }
+
+        clearAllSelections();
+
+        isSelecting = true;
+        selectionStart = { x: e.clientX, y: e.clientY };
+        selectionEnd = { ...selectionStart };
+
+        selectionRect.style.display = 'block';
+        updateSelectionRect();
+        e.preventDefault();
+    } else {
+        const isSelected = clickedCard.querySelector('.file-checkbox').checked;
+        if (!e.ctrlKey && !e.metaKey && !isSelected) {
+            clearAllSelections();
+        }
+    }
+});
+
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isSelecting || !fileGrid) return;
+
+        selectionEnd = { x: e.clientX, y: e.clientY };
+        updateSelectionRect();
+        updateSelectedFiles(true);
+        
+        handleAutoScroll(e);
+        e.preventDefault();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!isSelecting) return;
+        endSelection();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            clearAllSelections();
+            if (isSelecting) {
+                endSelection();
+            }
+        }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden && isSelecting) {
+            endSelection();
+        }
+    });
+
+    window.addEventListener('blur', () => {
+        if (isSelecting) {
+            endSelection();
+        }
+    });
+}
+
+// Filter and sort functionality
+function setupFilterAndSort() {
+    const filterPanel = document.getElementById('filter-panel');
+    const filterOverlay = document.getElementById('filter-overlay');
+    const filterTypeBtn = document.getElementById('filter-type');
+    const filterCloseBtn = document.querySelector('.filter-close');
+    const filterOptions = document.querySelectorAll('.filter-option');
+    const sortOptions = document.querySelectorAll('.sort-option');
+
+    function closeFilterPanel() {
+        filterPanel.classList.remove('active');
+        filterOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+   function updateCurrentFilterDisplay() {
+    let currentFilterDisplay = document.querySelector('.current-filter');
+    
+    if (!currentFilterDisplay && currentFilter && currentFilter !== 'all') {
+        currentFilterDisplay = document.createElement('div');
+        currentFilterDisplay.className = 'current-filter';
+        document.querySelector('.container').insertBefore(currentFilterDisplay, document.querySelector('.file-grid'));
+    }
+    
+    if (!currentFilter || currentFilter === 'all') {
+        if (currentFilterDisplay) {
+            currentFilterDisplay.remove();
+        }
+        return;
+    }
+    
+    const filterLabels = {
+        'image': '<i class="sort-option material-icons">image</i> Showing Images',
+        'document': '<i class="sort-option material-icons">description</i> Showing Documents',
+        'audio': '<i class="sort-option material-icons">audiotrack</i> Showing Audio',
+        'video': '<i class="sort-option material-icons">movie</i> Showing Video',
+        'archive': '<i class="sort-option material-icons">archive</i> Showing Archives',
+        'code': '<i class="sort-option material-icons">code</i> Showing Code',
+        'folder': '<i class="sort-option material-icons">folder</i> Showing Folders'
+    };
+
+    currentFilterDisplay.innerHTML = `
+        <span>${filterLabels[currentFilter]}</span>
+        <button class="clear-filter" title="Clear filter">&times;</button>
+    `;
+    
+    currentFilterDisplay.querySelector('.clear-filter').addEventListener('click', () => {
+        currentFilter = 'all';
+        currentFilterDisplay.remove();
+        sortFiles(currentSort);
+    });
+}
+function sortFiles(sortBy) {
+    const fileGrid = document.querySelector('.file-grid');
+    const files = Array.from(document.querySelectorAll('.file-card'));
+    
+    files.sort((a, b) => {
+        const nameA = a.querySelector('.file-name').textContent.toLowerCase();
+        const nameB = b.querySelector('.file-name').textContent.toLowerCase();
+        const sizeTextA = a.querySelector('.file-size').textContent;
+        const sizeTextB = b.querySelector('.file-size').textContent;
+        const dateA = a.dataset.date || '0';
+        const dateB = b.dataset.date || '0';
+        
+        const parseSize = (sizeStr) => {
+            const units = { 'KB': 1024, 'MB': 1024**2, 'GB': 1024**3, 'TB': 1024**4, 'Bytes': 1 };
+            const parts = sizeStr.split(' ');
+            const value = parseFloat(parts[0]) || 0;
+            const unit = parts[1] || 'Bytes';
+            return value * (units[unit] || 1);
+        };
+
+        const sizeA = parseSize(sizeTextA);
+        const sizeB = parseSize(sizeTextB);
+        
+        switch(sortBy) {
+            case 'name': return nameA.localeCompare(nameB);
+            case 'date': return dateB.localeCompare(dateA) || nameA.localeCompare(nameB);
+            case 'size': return (sizeB - sizeA) || nameA.localeCompare(nameB);
+            default: return 0;
+        }
+    });
+    
+    files.forEach(file => {
+        let fileType = file.dataset.isDir === 'true' ? 'folder' : getFileTypeFromName(file.querySelector('.file-name').textContent);
+
+        if (currentFilter && currentFilter !== 'all') {
+            file.style.display = (fileType === currentFilter) ? '' : 'none';
+        } else {
+            file.style.display = '';
+        }
+        
+        fileGrid.appendChild(file);
+    });
+}
+    filterTypeBtn.addEventListener('click', () => {
+        filterPanel.classList.add('active');
+        filterOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    filterCloseBtn.addEventListener('click', closeFilterPanel);
+    filterOverlay.addEventListener('click', closeFilterPanel);
+    
+    filterOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            currentFilter = option.dataset.type;
+            updateCurrentFilterDisplay();
+            sortFiles(currentSort);
+            closeFilterPanel();
+        });
+    });
+    
+    sortOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            sortOptions.forEach(opt => opt.classList.remove('active'));
+            this.classList.add('active');
+            currentSort = this.dataset.sort;
+            sortFiles(currentSort);
+        });
+    });
+    
+    document.querySelector('.sort-option[data-sort="name"]').classList.add('active');
+}
+
+function setupSearch() {
+    const searchInput = document.getElementById('search-input');
+    const fileCards = document.querySelectorAll('.file-card');
+
+    function performSearch() {
+        const query = searchInput.value.toLowerCase().trim();
+        fileCards.forEach(card => {
+            const itemName = card.querySelector('.file-name').textContent.toLowerCase();
+            card.style.display = itemName.includes(query) ? '' : 'none';
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', performSearch);
+    }
+}
+function renderArchiveTree(fullItemList, currentPath, archiveName) {
+    const content = document.getElementById("preview-content");
+    content.innerHTML = "";
+
+    const container = document.createElement('div');
+    container.className = 'archive-preview';
+
+    const header = document.createElement('h4');
+    header.textContent = `${archiveName}${currentPath ? '/' + currentPath.slice(0, -1) : ''}`;
+    container.appendChild(header);
+
+    const fileList = document.createElement('div');
+    fileList.className = 'archive-file-list';
+    
+    if (currentPath) {
+        const parentPath = currentPath.substring(0, currentPath.lastIndexOf('/', currentPath.length - 2) + 1);
+        const backItem = document.createElement('div');
+        backItem.className = 'archive-file-item archive-folder-item';
+        backItem.innerHTML = `
+            <i class="material-icons">arrow_upward</i>
+            <span>..</span>
+        `;
+        backItem.onclick = () => renderArchiveTree(fullItemList, parentPath, archiveName);
+        fileList.appendChild(backItem);
+    }
+
+    const directChildren = new Map();
+    
+    fullItemList.forEach(item => {
+        if (item.path.startsWith(currentPath)) {
+            const relativePath = item.path.substring(currentPath.length);
+            
+            if (relativePath === '') return;
+
+            const slashIndex = relativePath.indexOf('/');
+            
+            if (slashIndex === -1) {
+                directChildren.set(item.path, {
+                    name: relativePath,
+                    is_dir: false,
+                    path: item.path,
+                    size: item.size
+                });
+            } else {
+                const folderName = relativePath.substring(0, slashIndex);
+                const folderPath = currentPath + folderName + '/';
+                if (!directChildren.has(folderPath)) {
+                    directChildren.set(folderPath, {
+                        name: folderName,
+                        is_dir: true,
+                        path: folderPath
+                    });
+                }
+            }
+        }
+    });
+
+    const sortedChildren = Array.from(directChildren.values()).sort((a, b) => {
+        if (a.is_dir !== b.is_dir) {
+            return a.is_dir ? -1 : 1;
+        }
+        return a.name.localeCompare(b.name);
+    });
+
+    if (sortedChildren.length === 0 && !currentPath) {
+        fileList.innerHTML = '<p style="text-align: center; opacity: 0.7;">This archive appears to be empty.</p>';
+    }
+
+    sortedChildren.forEach(child => {
+        const item = document.createElement('div');
+        item.className = 'archive-file-item';
+        item.title = child.name;
+
+        if (child.is_dir) {
+            item.classList.add('archive-folder-item');
+            item.innerHTML = `
+                <i class="material-icons">folder</i>
+                <span>${child.name}</span>
+            `;
+            item.onclick = () => renderArchiveTree(fullItemList, child.path, archiveName);
+        } else {
+            const iconName = getIconForArchiveFile(child.name);
+            item.innerHTML = `
+                <i class="material-icons">${iconName}</i>
+                <span>${child.name}</span>
+                <span class="archive-file-size">${formatBytes(child.size || 0, 1)}</span>
+            `;
+        }
+        fileList.appendChild(item);
+    });
+
+    container.appendChild(fileList);
+    content.appendChild(container);
+}
+async function openPreview(url, type, path, name) {
+    const modal = document.getElementById("preview-modal");
+    const content = document.getElementById("preview-content");
+    content.innerHTML = '<div class="loading-spinner"></div>';
+
+    modal.dataset.path = path;
+    modal.dataset.name = name;
+    document.getElementById('preview-file-name').textContent = name;
+    
+    const originalCard = document.querySelector(`.file-card [data-path="${path}"]`)?.closest('.file-card');
+    const iconElement = originalCard?.querySelector('.file-icon');
+    if (iconElement) {
+        document.getElementById('preview-file-icon').src = iconElement.src;
+    }
+
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const contentType = response.headers.get("content-type");
+if (contentType && contentType.includes("application/json")) {
+    const data = await response.json();
+    if (data.type === 'archive') {
+        renderArchiveTree(data.files || [], '', name);
+    } else if (data.type === 'error') {
+         content.innerHTML = `<div class="unsupported-message"><p>${data.message}</p></div>`;
+    }
+    return;
+}
+
+        content.innerHTML = "";
+        const previewContainer = document.createElement("div");
+        previewContainer.className = "preview-container";
+        
+  if (type === "image") {
+    const previewContainer = document.createElement("div");
+    previewContainer.className = "preview-container";
+
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = "Preview";
+    previewContainer.appendChild(img);
+    content.appendChild(previewContainer);
+
+    const controls = document.createElement("div");
+    controls.className = "preview-controls";
+    controls.innerHTML = `
+      <button class="control-btn" id="zoom-out-btn" title="Zoom Out">
+        <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+      </button>
+      <button class="control-btn" id="reset-zoom-btn" title="Reset View">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 3h-6.1l2.28 2.28L13 9.46l1.41 1.41 4.17-4.17L21 9V3zM3 3h6.1l-2.28 2.28L11 9.46l-1.41 1.41-4.17-4.17L3 9V3zm18 18h-6.1l2.28-2.28L13 14.54l1.41-1.41 4.17 4.17L21 15v6zM3 21h6.1l-2.28-2.28L11 14.54l-1.41-1.41-4.17 4.17L3 15v6z"/></svg>
+      </button>
+      <button class="control-btn" id="zoom-in-btn" title="Zoom In">
+        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      </button>
+    `;
+    content.appendChild(controls);
+
+    let scale = 1;
+    let pointX = 0;
+    let pointY = 0;
+    let isPanning = false;
+    let start = { x: 0, y: 0 };
+    const minScale = 0.5;
+    const maxScale = 5;
+
+    function setTransform() {
+        const containerRect = previewContainer.getBoundingClientRect();
+        const scaledWidth = img.naturalWidth * scale;
+        const scaledHeight = img.naturalHeight * scale;
+        const maxPointX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+        const maxPointY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+        
+        if (pointX > maxPointX) pointX = maxPointX;
+        if (pointX < -maxPointX) pointX = -maxPointX;
+        if (pointY > maxPointY) pointY = maxPointY;
+        if (pointY < -maxPointY) pointY = -maxPointY;
+        if (scaledWidth <= containerRect.width) pointX = 0;
+        if (scaledHeight <= containerRect.height) pointY = 0;
+
+        img.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+    }
+
+    img.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        isPanning = true;
+        img.classList.add('grabbing');
+        start = { x: e.clientX - pointX, y: e.clientY - pointY };
+    });
+    window.addEventListener('mouseup', function() {
+        isPanning = false;
+        img.classList.remove('grabbing');
+    });
+    window.addEventListener('mousemove', function(e) {
+        if (!isPanning) return;
+        pointX = (e.clientX - start.x);
+        pointY = (e.clientY - start.y);
+        setTransform();
+    });
+    previewContainer.addEventListener('wheel', function(e) {
+        e.preventDefault();
+        const xs = (e.clientX - pointX) / scale;
+        const ys = (e.clientY - pointY) / scale;
+        const delta = -e.deltaY;
+        const newScale = scale * (1 + delta / 1000);
+        scale = Math.min(Math.max(newScale, minScale), maxScale);
+        pointX = e.clientX - xs * scale;
+        pointY = e.clientY - ys * scale;
+        setTransform();
+    });
+    document.getElementById('zoom-in-btn').onclick = () => {
+        scale = Math.min(scale * 1.2, maxScale);
+        setTransform();
+    };
+    document.getElementById('zoom-out-btn').onclick = () => {
+        scale = Math.max(scale / 1.2, minScale);
+        setTransform();
+    };
+    document.getElementById('reset-zoom-btn').onclick = () => {
+        scale = 1;
+        pointX = 0;
+        pointY = 0;
+        setTransform();
+    };
+
+  } else {
+    const previewContainer = document.createElement("div");
+    previewContainer.className = "preview-container";
+
+    if (type === "video") {
+        const video = document.createElement("video");
+        video.src = url;
+        video.controls = true;
+        video.autoplay = true;
+        previewContainer.appendChild(video);
+    }
+    else if (type === "audio") {
+        const audio = document.createElement("audio");
+        audio.src = url;
+        audio.controls = true;
+        audio.autoplay = true;
+        previewContainer.appendChild(audio);
+    }
+    else if (type === "document") {
+        if (url.toLowerCase().endsWith('.pdf')) {
+            const pdfContainer = document.createElement("div");
+            pdfContainer.className = "pdf-container";
+            
+            const loadingDiv = document.createElement("div");
+            loadingDiv.className = "pdf-loading";
+            loadingDiv.innerHTML = `
+                <div class="loading-spinner"></div>
+                <p>Loading PDF...</p>
+            `;
+            pdfContainer.appendChild(loadingDiv);
+            
+            const iframe = document.createElement("iframe");
+            iframe.src = url;
+            iframe.className = "pdf-preview";
+            iframe.style.display = "none";
+            
+            iframe.onload = function() {
+                loadingDiv.style.display = "none";
+                iframe.style.display = "block";
+            };
+            iframe.onerror = function() {
+                loadingDiv.innerHTML = `<p>Could not load PDF. <a href="${url}" target="_blank">Click here to open in new tab</a></p>`;
+            };
+            
+            pdfContainer.appendChild(iframe);
+            previewContainer.appendChild(pdfContainer);
+        } else {
+            const filename = url.split('/').pop().toLowerCase();
+            const officeExts = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'ods', 'odp'];
+            const fileExt = filename.split('.').pop();
+            
+            if (officeExts.includes(fileExt)) {
+                const pdfContainer = document.createElement("div");
+                pdfContainer.className = "pdf-container";
+                
+                const loadingDiv = document.createElement("div");
+                loadingDiv.className = "pdf-loading";
+                loadingDiv.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <p>Converting ${fileExt.toUpperCase()} to PDF...</p>
+                `;
+                pdfContainer.appendChild(loadingDiv);
+                
+                try {
+                    const pdfUrl = url + '?convert=pdf';
+                    const iframe = document.createElement("iframe");
+                    iframe.src = pdfUrl;
+                    iframe.className = "pdf-preview";
+                    iframe.style.display = "none";
+                    
+                    iframe.onload = function() {
+                        loadingDiv.style.display = "none";
+                        iframe.style.display = "block";
+                    };
+                    iframe.onerror = function() {
+                        loadingDiv.innerHTML = `<p>Could not convert ${fileExt.toUpperCase()} file to PDF for preview.</p><p><a href="${url}" target="_blank">Click here to download the original file</a></p>`;
+                    };
+                    
+                    pdfContainer.appendChild(iframe);
+                    previewContainer.appendChild(pdfContainer);
+                } catch (error) {
+                    console.error("Office file preview error:", error);
+                    loadingDiv.innerHTML = `<p>Could not load ${fileExt.toUpperCase()} file for preview.</p><p><a href="${url}" target="_blank">Click here to download the original file</a></p>`;
+                }
+            } else {
+                const iframe = document.createElement("iframe");
+                iframe.src = url;
+                iframe.className = "text-preview";
+                previewContainer.appendChild(iframe);
+            }
+        }
+    }
+    else if (type === "code" || type === "text") {
+        const iframe = document.createElement("iframe");
+        iframe.src = url;
+        iframe.className = "text-preview";
+        previewContainer.appendChild(iframe);
+    }
+   
+    else {
+        const unsupportedMsg = document.createElement("div");
+        unsupportedMsg.className = "unsupported-message";
+        unsupportedMsg.innerHTML = `<p>Preview not available for this file type.</p>`;
+        previewContainer.appendChild(unsupportedMsg);
+    }
+    
+    content.appendChild(previewContainer);
+  }
+
+    } catch (error) {
+        console.error("Preview failed:", error);
+        content.innerHTML = `<div class="unsupported-message"><p>Could not load preview.</p></div>`;
+    }
+}function getIconForArchiveFile(filename) {
+    const type = getFileTypeFromName(filename);
+    const iconMap = {
+        image: 'image',
+        document: 'description',
+        audio: 'audiotrack',
+        video: 'movie',
+        archive: 'archive',
+        code: 'code',
+        text: 'article',
+        folder: 'folder_open'
+    };
+    return iconMap[type] || 'insert_drive_file';
+}
+
+function setupPreviewActions() {
+    const modal = document.getElementById("preview-modal");
+    const downloadBtn = document.getElementById("preview-download-btn");
+    const renameBtn = document.getElementById("preview-rename-btn");
+    const moveBtn = document.getElementById("preview-move-btn");
+    const shareBtn = document.getElementById("preview-share-btn");
+    const deleteBtn = document.getElementById("preview-delete-btn");
+
+    downloadBtn.addEventListener('click', () => {
+        const path = modal.dataset.path;
+        if (!path) return;
+        
+        const originalLink = document.querySelector(`.file-card [data-path="${path}"]`)
+            ?.closest('.file-card')
+            ?.querySelector('.menu-dropdown a[href*="download"]');
+        
+        if (originalLink) {
+            originalLink.click();
+        }
+    });
+
+    renameBtn.addEventListener('click', () => {
+        const path = modal.dataset.path;
+        if (!path) return;
+        const originalBtn = document.querySelector(`.rename-btn[data-path="${path}"]`);
+        if (originalBtn) {
+            closePreview();
+            setTimeout(() => originalBtn.click(), 100);
+        }
+    });
+
+    moveBtn.addEventListener('click', () => {
+        const path = modal.dataset.path;
+        if (!path) return;
+        const originalBtn = document.querySelector(`.move-btn[data-path="${path}"]`);
+        if (originalBtn) {
+            closePreview();
+            setTimeout(() => originalBtn.click(), 100);
+        }
+    });
+
+    shareBtn.addEventListener('click', () => {
+        const path = modal.dataset.path;
+        if (!path) return;
+        const originalBtn = document.querySelector(`.share-btn[data-path="${path}"]`);
+        if (originalBtn) {
+            closePreview();
+            setTimeout(() => originalBtn.click(), 100);
+        }
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        const path = modal.dataset.path;
+        const name = modal.dataset.name;
+        if (!path || !name) return;
+
+        const originalForm = document.querySelector(`form input[name="item_path"][value="${path}"]`)?.closest('form');
+        if (originalForm) {
+            if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+                originalForm.submit();
+            }
+        }
+    });
+}
+
+function getFileIcon(filename) {
+    if (!filename) return "insert_drive_file";
+    const ext = filename.split('.').pop().toLowerCase();
+    const icons = {
+        folder: [''], image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
+        description: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'],
+        article: ['txt', 'md', 'rtf'], audiotrack: ['mp3', 'wav', 'ogg', 'flac'],
+        movie: ['mp4', 'mov', 'avi', 'mkv'], archive: ['zip', 'rar', '7z', 'tar', 'gz', 'zst'],
+        code: ['html', 'css', 'js', 'json', 'py', 'java', 'c', 'cpp', 'php', 'sh']
+    };
+    for (const icon in icons) {
+        if (icons[icon].includes(ext)) return icon;
+    }
+    return "insert_drive_file";
+}
+
+function closePreview() {
+  const modal = document.getElementById("preview-modal");
+  const media = modal.querySelector('video, audio');
+  if (media) { media.pause(); media.src = ''; }
+  modal.classList.remove("active");
+  document.body.style.overflow = "";
+  modal.querySelector("#preview-content").innerHTML = "";
+}
+
+// Bulk actions functionality
+function setupBulkActions() {
+    const bulkActions = document.getElementById("bulk-actions");
+    const bulkDownloadBtn = document.getElementById("bulk-download");
+    const bulkDeleteBtn = document.getElementById("bulk-delete");
+    const bulkMoveBtn = document.getElementById('bulk-move');
+    const bulkShareBtn = document.getElementById('bulk-share');
+    const countSpan = document.getElementById('bulk-actions-count');
+
+    document.querySelectorAll(".file-checkbox").forEach((box) =>
+        box.addEventListener("change", () => {
+            const card = box.closest('.file-card');
+            if (card) {
+                card.classList.toggle('selected', box.checked);
+            }
+            
+            const selected = document.querySelectorAll(".file-checkbox:checked");
+            if (bulkActions) bulkActions.classList.toggle("visible", selected.length > 0);
+            
+            if (countSpan) {
+                if (selected.length > 0) {
+                    countSpan.textContent = `${selected.length} item${selected.length > 1 ? 's' : ''} selected`;
+                } else {
+                    countSpan.textContent = '';
+                }
+            }
+        })
+    );
+
+    bulkDownloadBtn?.addEventListener("click", () => {
+        const selected = [...document.querySelectorAll(".file-checkbox:checked")].map(el => el.dataset.path);
+        if (!selected.length) return;
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "{{ url_for('bulk_download') }}";
+        selected.forEach(path => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "paths[]";
+            input.value = path;
+            form.appendChild(input);
+        });
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+    });
+
+    bulkMoveBtn?.addEventListener('click', () => {
+        const selectedPaths = [...document.querySelectorAll(".file-checkbox:checked")].map(el => el.dataset.path);
+        if (selectedPaths.length === 0) return;
+        isBulkMoving = true;
+        
+        const moveSelect = document.getElementById('move-select');
+        Array.from(moveSelect.options).forEach(opt => opt.disabled = false);
+        Array.from(moveSelect.options).forEach(opt => {
+            if (selectedPaths.includes(opt.value)) {
+                opt.disabled = true;
+            }
+        });
+        
+        openModal('move');
+        
+        const moveForm = document.getElementById('move-form');
+        const bulkMoveHandler = (event) => {
+            event.preventDefault();
+            const targetFolder = document.getElementById('move-select').value;
+            moveMultipleItems(selectedPaths, targetFolder);
+            moveForm.removeEventListener('submit', bulkMoveHandler);
+            isBulkMoving = false;
+        };
+        moveForm.addEventListener('submit', bulkMoveHandler, { once: true });
+    });
+
+    bulkDeleteBtn?.addEventListener("click", () => {
+        const selected = [...document.querySelectorAll(".file-checkbox:checked")].map(el => el.dataset.path);
+        if (selected.length && confirm(`Delete ${selected.length} items? This is irreversible.`)) {
+            Promise.all(selected.map(path => fetch("{{ url_for('delete') }}", {
+                method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `item_path=${encodeURIComponent(path)}`,
+            }))).then(() => window.location.reload());
+        }
+    });
+
+    bulkShareBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const selected = document.querySelectorAll(".file-checkbox:checked");
+        if (selected.length === 0) return;
+
+        if (selected.length > 1) {
+            alert('Multiple items cannot be shared directly. Please group them in a folder first.');
+            return;
+        }
+
+        const firstItem = selected[0];
+        const card = firstItem.closest('.file-card');
+        const path = firstItem.dataset.path;
+        const name = path.split('/').pop();
+        const isDir = card.dataset.isDir === 'true';
+
+        openShareModal(path, name, isDir);
+    });
+}
+
+function toggleSharePassword() {
+    const passwordField = document.getElementById('password-input');
+    const eyeIcon = document.getElementById('share-eye-icon');
+    
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        eyeIcon.innerHTML = `
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        `;
+    } else {
+        passwordField.type = 'password';
+        eyeIcon.innerHTML = `
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+        `;
+    }
+}
+
+function setupShareModal() {
+    const shareForm = document.getElementById('share-form');
+    const createLinkBtn = document.getElementById('create-link-btn');
+    const deleteLinkBtn = document.getElementById('delete-link-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+    const shareUrlInput = document.getElementById('share-url');
+    const linkContainer = document.getElementById('share-link-container');
+    
+    const accessPreviewCheckbox = document.getElementById('access-preview');
+    const accessDownloadCheckbox = document.getElementById('access-download');
+    
+    const expirySelect = document.getElementById('expiry-select');
+    const expirySwitch = document.getElementById('expiry-switch');
+    const expiryContainer = expirySwitch.parentElement.parentElement;
+    
+    const passwordInput = document.getElementById('password-input');
+    const passwordSwitch = document.getElementById('password-switch');
+    const passwordContainer = passwordSwitch.parentElement.parentElement;
+
+    function showPremiumPopup(e, slideNumber) {
+        if (e) e.preventDefault();
+        closeModals();
+        setTimeout(() => showShareSlideshowPopup(slideNumber), 200);
+    }
+    
+    expiryContainer.addEventListener('click', (e) => showPremiumPopup(e, 1));
+    passwordContainer.addEventListener('click', (e) => showPremiumPopup(e, 2));
+
+    function resetModalToCreateState(isDir = false) {
+        linkContainer.style.display = 'none';
+        deleteLinkBtn.style.display = 'none';
+        createLinkBtn.style.display = 'block';
+        createLinkBtn.textContent = 'Create Link';
+        shareUrlInput.value = '';
+        
+        accessPreviewCheckbox.checked = !isDir;
+        accessPreviewCheckbox.disabled = isDir;
+        
+        accessDownloadCheckbox.checked = true;
+        
+        expirySwitch.checked = false;
+        expirySelect.disabled = true;
+        
+        passwordSwitch.checked = false;
+        passwordInput.disabled = true;
+        passwordInput.value = '';
+    }
+
+    async function openShareModal(path, name, isDir) {
+        shareForm.reset();
+        resetModalToCreateState(isDir);
+        createLinkBtn.disabled = false;
+        
+        document.getElementById('share-path').value = path;
+        document.getElementById('share-modal-message').textContent = `Sharing: ${name}`;
+
+        try {
+            const formData = new FormData();
+            formData.append('path', path);
+            const response = await fetch("{{ url_for('get_share_details') }}", {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.success && result.exists) {
+                shareUrlInput.value = result.url;
+                linkContainer.style.display = 'block';
+                deleteLinkBtn.style.display = 'block';
+                createLinkBtn.textContent = 'Update';
+                accessPreviewCheckbox.checked = result.access === 'preview' || result.access === 'both';
+                accessDownloadCheckbox.checked = result.access === 'download' || result.access === 'both';
+            }
+        } catch (error) {
+            console.error('Failed to fetch share details:', error);
+        } finally {
+            openModal('share');
+        }
+    }
+
+    document.querySelectorAll('.share-btn').forEach(btn => btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const isDir = this.closest('.file-card').dataset.isDir === 'true';
+        openShareModal(this.dataset.path, this.dataset.name, isDir);
+    }));
+    
+    shareForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const originalButtonText = createLinkBtn.textContent;
+        createLinkBtn.disabled = true;
+        createLinkBtn.textContent = 'Processing...';
+
+        const formData = new FormData();
+        formData.append('path', document.getElementById('share-path').value);
+        formData.append('allow_preview', document.getElementById('access-preview').checked);
+        formData.append('allow_download', document.getElementById('access-download').checked);
+        formData.append('expiry', '0');
+        
+        try {
+            const response = await fetch("{{ url_for('create_share_link') }}", {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                shareUrlInput.value = result.url;
+                linkContainer.style.display = 'block';
+                deleteLinkBtn.style.display = 'block';
+                
+                createLinkBtn.textContent = 'Link Updated!';
+                setTimeout(() => {
+                    createLinkBtn.textContent = 'Update';
+                }, 2000);
+            } else {
+                alert('Error: ' + result.message);
+                createLinkBtn.textContent = originalButtonText;
+            }
+        } catch (error) {
+            alert('An unexpected error occurred.');
+            createLinkBtn.textContent = originalButtonText;
+        } finally {
+            createLinkBtn.disabled = false;
+        }
+    });
+
+    deleteLinkBtn.addEventListener('click', async function() {
+        if (!confirm('Are you sure you want to permanently delete this share link?')) {
+            return;
+        }
+        
+        this.disabled = true;
+        this.textContent = 'Deleting...';
+        
+        const path = document.getElementById('share-path').value;
+        const formData = new FormData();
+        formData.append('path', path);
+        
+        try {
+            const response = await fetch("{{ url_for('delete_share_link') }}", {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+                resetModalToCreateState();
+            } else {
+                alert('Error: ' + (result.message || 'Could not delete the link.'));
+            }
+        } catch (error) {
+            alert('An unexpected error occurred while trying to delete the link.');
+        } finally {
+            this.disabled = false;
+            this.textContent = 'Delete';
+        }
+    });
+
+    copyLinkBtn.addEventListener('click', function() {
+        const button = this;
+        const originalText = button.textContent;
+        shareUrlInput.select();
+        shareUrlInput.setSelectionRange(0, 99999);
+
+        try {
+            document.execCommand('copy');
+            button.textContent = 'Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        } catch (err) {
+            navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+                button.textContent = 'Copied!';
+                setTimeout(() => { button.textContent = originalText; }, 2000);
+            }).catch(clipboardErr => {
+                console.error('Copy to clipboard failed:', clipboardErr);
+            });
+        }
+    });
+}
+
+// Menu and Modal functionality
+function setupMenuAndModals() {
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.file-menu, .start-menu')) {
+            document.querySelectorAll('.menu-dropdown.active').forEach(d => d.classList.remove('active'));
+        }
+        if (e.target.matches('.modal-close, .modal-cancel, .modal-overlay')) {
+            closeModals();
+        }
+    });
+
+    document.getElementById('start-btn')?.addEventListener('click', e => {
+        e.stopPropagation();
+        document.getElementById('start-menu-dropdown').classList.toggle('active');
+    });
+
+    document.querySelectorAll('.menu-trigger').forEach(trigger => {
+        trigger.addEventListener('click', e => {
+            e.stopPropagation();
+            const dropdown = trigger.nextElementSibling;
+            document.querySelectorAll('.menu-dropdown.active').forEach(d => d !== dropdown && d.classList.remove('active'));
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.rename-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const card = this.closest('.file-card');
+            const isDir = card.dataset.isDir === 'true';
+            const path = this.dataset.path;
+            const name = this.dataset.name;
+            const renameInput = document.getElementById('rename-input');
+            const renamePathInput = document.getElementById('rename-path');
+
+            renamePathInput.value = path;
+
+            if (isDir) {
+                renameInput.value = name;
+                renameInput.select();
+            } else {
+                const lastDotIndex = name.lastIndexOf('.');
+                if (lastDotIndex > 0 && lastDotIndex < name.length - 1) {
+                    const baseName = name.substring(0, lastDotIndex);
+                    renameInput.value = baseName;
+                    renameInput.focus();
+                    renameInput.select();
+                } else { 
+                    renameInput.value = name;
+                    renameInput.select();
+                }
+            }
+            openModal('rename');
+        });
+    });
+
+    document.getElementById('create-folder-btn')?.addEventListener('click', () => openModal('createFolder'));
+    
+    document.querySelectorAll('.move-btn').forEach(btn => btn.addEventListener('click', function() {
+        const path = this.dataset.path;
+        document.getElementById('move-path').value = path;
+        const select = document.getElementById('move-select');
+        [...select.options].forEach(opt => opt.disabled = (opt.value === path || opt.value === "{{ current_dir }}"));
+        select.querySelector('option[value="ROOT"]').disabled = false;
+        openModal('move');
+    }));
+
+    document.getElementById('move-form')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (isBulkMoving) return;
+        
+        const formData = new FormData(this);
+        const targetFolder = formData.get('target_folder');
+        const currentPath = formData.get('current_path');
+        
+        moveMultipleItems([currentPath], targetFolder);
+    });
+}
+
+function setupHamburgerMenu() {
+  const toggle = document.getElementById("hamburger-toggle");
+  const icon = document.getElementById("hamburger-icon");
+  const menu = document.getElementById("mobile-menu");
+  const overlay = document.getElementById("mobile-menu-overlay");
+
+  const toggleMenu = (open) => {
+      icon.classList.toggle("active", open);
+      menu.classList.toggle("active", open);
+      overlay.classList.toggle("active", open);
+      document.body.style.overflow = open ? 'hidden' : '';
+  };
+
+  toggle.addEventListener('click', () => toggleMenu(!menu.classList.contains('active')));
+  overlay.addEventListener('click', () => toggleMenu(false));
+}
+
+function setupUpload() {
+    const fileInput = document.getElementById("file-input");
+    const folderInput = document.getElementById("folder-input");
+    document.getElementById("upload-file-btn")?.addEventListener("click", () => fileInput.click());
+    document.getElementById("upload-folder-btn")?.addEventListener("click", () => folderInput.click());
+    fileInput?.addEventListener("change", handleUpload);
+    folderInput?.addEventListener("change", handleUpload);
+
+    // --- ADDED ---
+    uploadPopup.cancelBtn.addEventListener('click', () => {
+        isUploadCancelled = true;
+    });
+
+    uploadPopup.closeBtn.addEventListener('click', () => {
+        hideUploadPopup();
+        setTimeout(() => window.location.reload(), 400);
+    });
+    // --- END ADDED ---
+}
+
+function setupSlideshows() {
+    document.querySelector('#slideshow-popup .close-popup').addEventListener('click', closeShareSlideshowPopup);
+    document.getElementById('slideshow-popup-overlay').addEventListener('click', closeShareSlideshowPopup);
+
+    document.querySelectorAll('#slideshow-popup .dot').forEach(dot => {
+        dot.addEventListener('click', function() {
+            currentShareSlide = parseInt(this.dataset.slide);
+            showShareSlide(currentShareSlide);
+            startShareSlideshow();
+        });
+    });
+}
+
+// Main initialization
+document.addEventListener('DOMContentLoaded', function() {
+    window.exitMobileMoveMode = exitMobileMoveMode;
+    setupHamburgerMenu();
+    setupEnhancedDragAndDrop();
+    setupDragAndDrop();
+    setupFileSelection();
+    setupFilterAndSort();
+    setupBulkActions();
+    setupMenuAndModals();
+    setupSlideshows();
+    setupUpload();
+    setupSearch();
+    setupShareModal();
+    setupPreviewActions();
+    document.querySelectorAll('.file-card').forEach(card => {
+        if (card.dataset.isDir === 'true') {
+            const indicator = document.createElement('div');
+            indicator.className = 'move-indicator';
+            indicator.textContent = 'Move Here';
+            card.appendChild(indicator);
+        }
+    });
+});
+    window.addEventListener('beforeunload', function(e) {
+        if (currentUploadInfo) {
+            const data = JSON.stringify(currentUploadInfo);
+            navigator.sendBeacon("{{ url_for('cancel_upload') }}", new Blob([data], {type: 'application/json'}));
+        }
+    });
+
+window.addEventListener("load", () => {
+    const loadingScreen = document.querySelector(".loading-screen");
+    if (loadingScreen) {
+        loadingScreen.style.opacity = "0";
+        setTimeout(() => loadingScreen.remove(), 300);
+    }
+
+    const progress = document.querySelector(".storage-progress");
+    const percentUsed = parseFloat("{{ percent_used }}");
+    if (progress) {
+        if (percentUsed >= 90) progress.classList.add("danger");
+        else if (percentUsed >= 75) progress.classList.add("warning");
+    }
+
+    if (shouldShowStoragePopup(percentUsed)) {
+        setTimeout(showStorageFullPopup, 1000);
+    }
+});
+</script>
+</body>
+</html>

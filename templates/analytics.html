@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Analytics - CloudX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=web_traffic" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --border: rgba(255, 255, 255, 0.06);
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --accent: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--text);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .page-content {
+            opacity: 0;
+            animation: fadeIn 0.6s 0.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 80px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+        }
+
+        .nav-return {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: fit-content;
+            margin-left: -0.75rem;
+        }
+
+        .nav-return:hover {
+            color: var(--text);
+        }
+
+        .nav-return svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+            justify-self: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 5rem;
+        }
+
+        .page-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            filter: brightness(0) invert(1);
+        }
+
+        .file-name {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .share-url {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            font-family: 'Courier New', monospace;
+            font-weight: 300;
+            word-break: break-all;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 1.5rem 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--text);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .chart-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem 2.5rem;
+            margin-bottom: 2.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chart-section:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .chart-header {
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .chart-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .location-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .location-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .location-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .location-flag {
+            font-size: 1.5rem;
+        }
+
+        .location-name {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .location-count {
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .location-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .location-bar-fill {
+            height: 100%;
+            background: var(--text);
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .device-item {
+            padding: 1.25rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .device-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .device-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .device-name {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .device-percentage {
+            font-size: 1.75rem;
+            font-weight: 300;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .ratio-chart {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .ratio-bar-container {
+            flex: 1;
+            height: 3rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .ratio-segment {
+            height: 100%;
+            transition: width 0.6s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+
+        .ratio-segment.preview {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .ratio-segment.download {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .ratio-legend {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+        }
+
+        .legend-label {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .legend-value {
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem 2.5rem;
+            }
+
+            .header-container {
+                padding: 0 1rem;
+                height: 64px;
+            }
+
+            .logo {
+                height: 24px;
+            }
+
+            .nav-return {
+                margin-left: -0.5rem;
+            }
+
+            .file-name {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-section {
+                padding: 1.5rem;
+            }
+
+            .ratio-chart {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .ratio-legend {
+                justify-content: center;
+            }
+
+            .device-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .file-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .device-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                height: 20px;
+            }
+
+            .nav-return svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="page-content">
+        <header class="header">
+            <div class="header-container">
+                <a href="{{ url_for('shared_files') }}" class="nav-return">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </a>
+                <img src="/static/icons/logo.png" alt="CloudX" class="logo">
+                <div></div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="page-header">
+                    <div class="file-info">
+                        <img src="{{ file_icon }}" alt="file" class="file-icon">
+                        <div>
+                            <div class="file-name">{{ file_name }}</div>
+                            <div class="share-url">{{ share_url }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Link Views</span>
+                            <i class="material-icons stat-icon">visibility</i>
+                        </div>
+                        <div class="stat-value">{{ "{:,}".format(total_page_views) }}</div>
+                        <div class="stat-change">Total times the link was loaded</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Unique Visitors</span>
+                            <i class="material-icons stat-icon">people</i>
+                        </div>
+                        <div class="stat-value">{{ "{:,}".format(unique_visitors) }}</div>
+                        <div class="stat-change">Based on IP address</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Total Engagements</span>
+                            <span class="material-symbols-outlined stat-icon">web_traffic</span>
+                        </div>
+                        <div class="stat-value">{{ "{:,}".format(total_views) }}</div>
+                        <div class="stat-change">Previews + Downloads</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Avg. View Time</span>
+                            <i class="material-icons stat-icon">schedule</i>
+                        </div>
+                        <div class="stat-value">N/A</div>
+                        <div class="stat-change">Feature coming soon</div>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <div class="chart-title">Preview vs Download</div>
+                        <div class="chart-subtitle">User engagement breakdown</div>
+                    </div>
+
+                    {% if total_previews > 0 or total_downloads > 0 %}
+                    <div class="ratio-chart">
+                        <div class="ratio-bar-container">
+                            {% if total_previews > 0 %}
+                            <div class="ratio-segment preview" style="width: {{ preview_perc }}%">
+                                <span>Preview Only</span>
+                            </div>
+                            {% endif %}
+                            {% if total_downloads > 0 %}
+                            <div class="ratio-segment download" style="width: {{ download_perc }}%">
+                                <span>Downloaded</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="ratio-legend">
+                            {% if total_previews > 0 %}
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: rgba(255, 255, 255, 0.12)"></div>
+                                <span class="legend-label">Preview:</span>
+                                <span class="legend-value">{{ "{:,}".format(total_previews) }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if total_downloads > 0 %}
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: var(--text)"></div>
+                                <span class="legend-label">Download:</span>
+                                <span class="legend-value">{{ "{:,}".format(total_downloads) }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                        <p style="text-align: center; color: var(--text-dim); font-weight: 300;">No previews or downloads yet</p>
+                    {% endif %}
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <div class="chart-title">Geographic Distribution</div>
+                        <div class="chart-subtitle">Top locations by visitor count</div>
+                    </div>
+                    <div class="location-list">
+                        {% if locations %}
+                            {% for loc in locations %}
+                            <div class="location-item">
+                                <div>
+                                    <div class="location-info">
+                                        <span class="location-flag">{{ loc.flag }}</span>
+                                        <span class="location-name">{{ loc.name }}</span>
+                                    </div>
+                                    <div class="location-bar">
+                                        <div class="location-bar-fill" style="width: {{ loc.bar_width }}%"></div>
+                                    </div>
+                                </div>
+                                <span class="location-count">{{ "{:,}".format(loc.count) }}</span>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p style="text-align: center; color: var(--text-dim); font-weight: 300;">No location data available yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-header">
+                        <div class="chart-title">Device & Platform Insights</div>
+                        <div class="chart-subtitle">How visitors access your link</div>
+                    </div>
+                    <div class="device-grid">
+                        <div class="device-item">
+                            <div class="device-icon">💻</div>
+                            <div class="device-name">Desktop</div>
+                            <div class="device-percentage">{{ devices['Desktop'].percentage }}%</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-icon">📱</div>
+                            <div class="device-name">Mobile</div>
+                            <div class="device-percentage">{{ devices['Mobile'].percentage }}%</div>
+                        </div>
+                        <div class="device-item">
+                            <div class="device-icon">⌨️</div>
+                            <div class="device-name">Tablet</div>
+                            <div class="device-percentage">{{ devices['Tablet'].percentage }}%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            document.getElementById('loadingScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 400);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                const fills = document.querySelectorAll('.location-bar-fill, .ratio-segment');
+                fills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 100);
+                });
+            }, 600);
+        });
+    </script>
+</body>
+</html>

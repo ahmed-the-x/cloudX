@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudX - File Not Available</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* Combined CSS Variables */
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray: #1a1a1a;
+            --danger: #ff0000;
+            --mobile-padding: 1rem;
+            --mobile-section-spacing: 2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .share-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Left Brand Section */
+        .brand-section {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            position: relative;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: clamp(3rem, 8vw, 5rem);
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-align: center;
+            letter-spacing: -0.02em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo:hover {
+            transform: none;
+        }
+
+        .brand-tagline {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #8a8a8a;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-top: -0.5rem;
+        }
+
+        .brand-cta {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .brand-cta:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-subtext {
+            font-size: 0.9rem;
+            color: #666666;
+            text-align: center;
+            margin-top: 0.75rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* Right Content Section */
+        .content-section {
+            background: rgba(255, 255, 255, 0.01);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+
+        .gone-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .gone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+
+        .gone-icon {
+            font-size: 4rem;
+            color: #ff6666;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .gone-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .gone-message {
+            font-size: 1.1rem;
+            color: #8a8a8a;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .gone-reasons {
+            background: rgba(255, 102, 102, 0.05);
+            border: 1px solid rgba(255, 102, 102, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .gone-reasons-title {
+            font-size: 0.9rem;
+            color: #ff9999;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .gone-reasons-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .gone-reasons-list li {
+            color: #cccccc;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .gone-reasons-list li::before {
+            content: '•';
+            color: #ff6666;
+            margin-right: 0.75rem;
+            font-weight: bold;
+        }
+
+        .gone-actions {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        .action-btn.primary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn .material-icons {
+            font-size: 1.2rem;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .share-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .brand-section {
+                min-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 2rem 1rem;
+            }
+
+            .brand-logo {
+                font-size: clamp(2.5rem, 8vw, 3.5rem);
+                margin-bottom: 1rem;
+            }
+
+            .brand-tagline {
+                font-size: clamp(1rem, 3vw, 1.3rem);
+                margin-bottom: 1.5rem;
+            }
+
+            .brand-cta {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+
+            .content-section {
+                padding: 2rem 1rem;
+            }
+
+            .gone-card {
+                padding: 2rem 1.5rem;
+                margin-top: 1rem;
+            }
+
+            .gone-actions {
+                flex-direction: column;
+            }
+
+            .gone-icon {
+                font-size: 3rem;
+            }
+
+            .gone-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-section {
+                min-height: 35vh;
+                padding: 1.5rem 1rem;
+            }
+
+            .gone-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .gone-title {
+                font-size: 1.3rem;
+            }
+
+            .gone-message {
+                font-size: 1rem;
+            }
+
+            .action-btn {
+                padding: 0.875rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-section > * {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .gone-card {
+            animation: fadeInUp 0.6s ease-out 0.3s forwards;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+                        .logo-img {
+    max-width: 230px;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+    </style>
+</head>
+<body>
+    <div class="share-container">
+        <div class="brand-section">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+            <div class="brand-tagline">Free • Fast • Secure</div>
+            <a href="https://cloudxhq.com" class="brand-cta">5GB Free Storage</a>
+            <div class="brand-subtext">No credit card required</div>
+        </div>
+        <div class="content-section">
+            <div class="gone-card">
+                <span class="material-icons gone-icon">cloud_off</span>
+                <h1 class="gone-title">File Not Available</h1>
+                <p class="gone-message">
+                    This shared file is no longer accessible. The link you're looking for may have expired or been removed.
+                </p>
+                
+                <div class="gone-reasons">
+                    <div class="gone-reasons-title">Possible Reasons</div>
+                    <ul class="gone-reasons-list">
+                        <li>The share link has expired</li>
+                                                <li>The file has been deleted by owner</li>
+
+                        <li>The file has been moved or renamed</li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

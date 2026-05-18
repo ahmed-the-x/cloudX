@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About - CloudX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='website.css') }}" />
+
+<style>
+      .hero-section {
+      padding-top: 8rem;
+      padding-bottom: 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .hero-content {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="page-container">
+    <header>
+      <div class="header-content">
+<a href="/" class="logo">
+  <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo">
+</a>
+
+        <div class="hamburger-menu" id="hamburger-toggle">
+          <div class="hamburger-icon" id="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+      </div>
+      <div class="mobile-menu-items">
+<a href="/about" class="mobile-menu-item">About</a>
+<a href="/pricing" class="mobile-menu-item">Pricing</a>
+<a href="/why-us" class="mobile-menu-item">Why Us?</a>
+        <a href="/contact" class="mobile-menu-item">Contact</a>
+<a href="https://app.cloudxhq.com/login" class="mobile-menu-item">Login</a>      
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">About Us</h1>
+        <p class="hero-subtitle">Fast, secure and completely FREE to start.</p>
+      </div>
+
+
+      <div class="stats-container">
+        <div class="feature-card">
+          <h3>Our Story</h3>
+          <p>CloudX was created by a creative team, with a simple vision: file storage shouldn't be complicated. After years of dealing with overcomplicated platforms that seemed designed to confuse rather than help, the goal became obvious: build something better.</p>
+          <p>The result is CloudX, a minimalist approach to file storage that puts simplicity and user experience first. No unnecessary features, no confusing interfaces, just a straightforward way to store and access your files.</p>
+          <p>We believe the best technology is invisible technology. When you use CloudX, you're not fighting with the interface or hunting for features, you're simply getting things done.</p>
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Free Storage</h3>
+          <p>We believe great file storage should be accessible to everyone. That's why CloudX offers a generous free plan, no credit card required, no hidden fees.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Security First</h3>
+          <p>Built on zero trust architecture, CloudX assumes nothing and verifies everything. Your files are encrypted end-to-end with ultra fast uploads and downloads from anywhere in the world.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Built Different</h3>
+          <p>While others add features, we remove frustration. Every design decision is made with one question: does this make file storage simpler? The answer shapes everything we build.</p>
+        </div>
+      </div>
+
+      <div class="cta-section">
+        <h2 class="cta-title">What if less was MORE?</h2>
+        <p class="cta-subtitle">Join others who've discovered what file storage should be.</p>
+        <div class="hero-cta">
+<button class="btn success" onclick="window.location.href='/pricing'">Start Free</button>
+          <button class="btn" onclick="window.location.href='/why-us'">Learn More</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p><span class="nav-linky"> CloudX &copy; 2025 </span> | <a href="/privacy" class="nav-link"> Privacy Policy </a> | <a href="/terms" class="nav-link">Terms of Service</a></p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Mobile Menu Functionality
+    const toggle = document.getElementById("hamburger-toggle");
+    const icon = document.getElementById("hamburger-icon");
+    const menu = document.getElementById("mobile-menu");
+    const overlay = document.getElementById("mobile-menu-overlay");
+    const body = document.body;
+
+    function closeMenu() {
+      icon.classList.remove("active");
+      menu.classList.remove("active");
+      overlay.classList.remove("active");
+      body.classList.remove("menu-active");
+      document.body.style.overflow = '';
+    }
+
+    function openMenu() {
+      icon.classList.add("active");
+      menu.classList.add("active");
+      overlay.classList.add("active");
+      body.classList.add("menu-active");
+      document.body.style.overflow = 'hidden';
+    }
+
+    toggle.addEventListener('click', () => menu.classList.contains('active') ? closeMenu() : openMenu());
+    overlay.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu-item, .nav-link').forEach(link => link.addEventListener('click', closeMenu));
+
+    // Smooth Scrolling for Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scroll Effects
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+  </script>
+</body>
+</html>

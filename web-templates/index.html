@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CloudX - Free Secure Cloud Storage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='website.css') }}" />
+  <style>
+    /* Dark Theme Variables */
+    :root {
+      --bg: #000000;
+      --surface: #0a0a0a;
+      --border: rgba(255, 255, 255, 0.06);
+      --text: #ffffff;
+      --text-dim: rgba(255, 255, 255, 0.5);
+      --accent: #ffffff;
+    }
+
+    /* ========== MODERNIZED UPLOAD SECTION ========== */
+    .public-upload-section {
+      /* MODIFIED: Reduced padding-top from 120px to 80px */
+      padding: 80px 20px 160px 20px;
+      background: linear-gradient(180deg, #000000 0%, #0a0a0a 20%, #000000 100%);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .public-upload-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      /* MODIFIED: Reduced size and opacity */
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .upload-area-container {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .stats-container {
+      max-width: 960px; /* Made wider */
+      margin: 120px auto 0 auto; /* Center it and keep top margin */
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Upload Box - Redesigned */
+    .upload-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 64px 48px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+
+    .upload-box:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .upload-box-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 32px;
+      filter: invert(1);
+      opacity: 0.9;
+      transition: all 0.3s ease;
+    }
+
+    .upload-box:hover .upload-box-icon {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .upload-box h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 16px 0;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .upload-box p {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-dim);
+      margin: 0 0 40px 0;
+      line-height: 1.6;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 300;
+    }
+
+    .upload-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .upload-buttons .btn {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0 32px;
+      height: 52px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.01em;
+      min-width: 160px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .upload-buttons .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Email Link Box - Redesigned */
+    .email-link-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 64px 48px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .email-link-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    }
+
+    .email-link-box h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 16px 0;
+      letter-spacing: -0.02em;
+    }
+
+    .email-link-box p {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--text-dim);
+      margin: 0 0 24px 0;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .email-link-box p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .email-link-box .btn {
+      background: var(--accent);
+      color: var(--bg);
+      border: 1px solid var(--accent);
+      padding: 0 32px;
+      height: 56px;
+      font-size: 16px;
+      font-weight: 500;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 32px;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.01em;
+    }
+    
+    #generate-link-btn {
+      margin-top: 20px;
+    }
+
+    .email-link-box .btn:hover {
+      background: var(--text);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.15);
+    }
+
+    #email-link-form {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Email form "Send" button */
+    #email-link-form .btn {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0 28px;
+      height: 52px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      font-family: 'Inter', sans-serif;
+      width: auto;
+      margin: 0;
+    }
+
+    #email-link-form .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .public-upload-section {
+        padding: 80px 20px 120px 20px;
+      }
+
+      .upload-box, .email-link-box {
+        padding: 48px 32px;
+      }
+
+      .upload-box h3, .email-link-box h3 {
+        font-size: 28px;
+      }
+
+      .upload-buttons {
+        flex-direction: column;
+      }
+
+      .upload-buttons .btn {
+        width: 100%;
+      }
+
+      #email-link-form {
+        flex-direction: column;
+      }
+
+      #email-link-form .btn {
+        width: 100%;
+      }
+      
+      .stats-container {
+        margin-top: 100px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .upload-box, .email-link-box {
+        padding: 40px 24px;
+      }
+
+      .upload-box h3, .email-link-box h3 {
+        font-size: 24px;
+      }
+
+      .upload-box-icon {
+        width: 64px;
+        height: 64px;
+      }
+      
+      .stats-container {
+        margin-top: 80px;
+      }
+    }
+  </style>
+  
+  <style>
+    /* === Overlays === */
+    .pub-popup-overlay, .pub-modal-overlay, .pub-upload-popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .pub-popup-overlay.active, .pub-modal-overlay.active, .pub-upload-popup-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* === White Limit Popup (from style.css) === */
+    .pub-limit-popup {
+      background: var(--white, #fff); /* Use CSS var with fallback */
+      color: var(--black, #000);
+      padding: 30px;
+      margin: 30px auto;
+      text-align: center;
+      border-radius: 8px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1001;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .pub-limit-popup.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .pub-limit-popup-header {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .pub-limit-popup h3 {
+      font-size: 1.5rem;
+      margin: 0 0 10px 0;
+      font-weight: 500;
+      color: var(--black, #000);
+    }
+
+    .pub-limit-popup p {
+      margin: 0 0 25px 0;
+      line-height: 1.5;
+      opacity: 0.8;
+      color: var(--black, #000);
+    }
+
+    .pub-limit-popup .btn {
+      background: transparent;
+      border: 2px solid var(--black, #000);
+      color: var(--black, #000);
+      margin-top: 15px;
+      /* Copied from website.css .btn */
+      padding: 0 32px;
+      height: 52px;
+      font-size: 15px;
+      font-weight: 500;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.01em;
+      min-width: 160px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .pub-limit-popup .btn:hover {
+      background: var(--black, #000);
+      color: var(--white, #fff);
+    }
+
+    .pub-close-popup {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--black, #000);
+      opacity: 0.7;
+      transition: all 0.2s ease;
+    }
+
+    .pub-close-popup:hover {
+      opacity: 1;
+    }
+    
+    /* === Dark Upload Popup (from pro_user.html) === */
+    .pub-upload-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background: var(--surface, #0a0a0a);
+      color: var(--text, #fff);
+      border-radius: 1.5rem;
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      z-index: 1002;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .pub-upload-popup.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+
+    .pub-upload-popup-content-wrapper {
+      display: flex;
+      width: 200%;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .pub-upload-popup-slide {
+      width: 50%;
+      padding: 2.5rem;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .pub-upload-popup-header h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    .pub-upload-popup-header p {
+      margin: 0 0 2rem 0;
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
+      font-size: 0.95rem;
+      font-weight: 300;
+      min-height: 2.5em;
+    }
+
+    .pub-upload-progress-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .pub-upload-filename {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 0.9rem;
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
+      margin-bottom: 0.75rem;
+      font-weight: 300;
+      min-height: 1.2em;
+    }
+
+    .pub-upload-progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .pub-upload-progress-bar {
+      height: 100%;
+      width: 0;
+      background: var(--accent, #fff);
+      border-radius: 2px;
+      transition: width 0.3s linear;
+    }
+
+    .pub-upload-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
+      margin-top: 0.75rem;
+      font-weight: 300;
+      min-height: 1.2em;
+    }
+
+    #upload-popup-count {
+      font-weight: 500;
+      color: var(--text, #fff);
+    }
+
+    .pub-upload-popup-footer {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    #upload-cancel-btn, #upload-close-btn {
+      width: auto;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+      background: transparent;
+      color: var(--text, #fff);
+      font-size: 0.875rem;
+      font-weight: 400;
+      cursor: pointer;
+      border-radius: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    #upload-cancel-btn:hover, #upload-close-btn:hover {
+      background: var(--accent, #fff);
+      color: var(--bg, #000);
+      border-color: var(--accent, #fff);
+    }
+
+    .pub-virus-file-list {
+      text-align: left;
+      max-height: 140px;
+      overflow-y: auto;
+      background: #1a1a1a;
+      padding: 8px 15px;
+      border-radius: 8px;
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+    }
+
+    .pub-virus-file-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 0.95em;
+      color: #ddd;
+      border-bottom: 1px solid #3a3a3a;
+    }
+    .pub-virus-file-item:last-child {
+      border-bottom: none;
+    }
+    .pub-virus-file-item .material-icons {
+      color: #ff5555;
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    /* === Dark Share Modal (from pro_user.html & style.css) === */
+    
+    /* Base structure */
+    .pub-share-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%); /* Initial state for animation */
+      z-index: 1001;
+      background: var(--surface, #0a0a0a);
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+      border-radius: 1.5rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    }
+    
+    .pub-share-modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%); /* Final centered state */
+    }
+    
+    .pub-modal-content {
+      /* This class is the wrapper, padding is applied to header/body */
+    }
+    
+    .pub-modal-header {
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .pub-modal-header h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--text, #fff);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+    
+    .pub-modal-close {
+      font-size: 1.75rem;
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease;
+    }
+    
+    .pub-modal-close:hover {
+      color: var(--text, #fff);
+    }
+
+    .pub-modal-body {
+      padding: 2rem;
+    }
+    
+    .pub-modal-body p {
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
+      font-size: 0.95rem;
+      margin-top: 0;
+      font-weight: 300;
+    }
+    
+    .pub-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    
+    /* Button styles (for modal) */
+    .pub-btn {
+      background: transparent;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+      color: var(--text, #fff);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 400;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      min-width: 0;
+      height: auto;
+    }
+
+    .pub-btn:hover {
+      background: var(--accent, #fff);
+      color: var(--bg, #000);
+      border-color: var(--accent, #fff);
+    }
+
+    .pub-btn.pub-small {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem; /* Match other buttons */
+      flex-shrink: 0;
+    }
+    
+    /* Input field for EMAIL FORM */
+    .pub-email-input {
+      flex: 1;
+      padding: 0 20px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .pub-email-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .pub-email-input::placeholder {
+      color: var(--text-dim);
+    }
+    
+    /* Input field for SHARE MODAL */
+    .pub-modal-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border, rgba(255, 255, 255, 0.06));
+      border-radius: 0.75rem; /* 12px */
+      color: var(--text, #fff);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease;
+      height: auto; /* Let padding define height */
+    }
+    .pub-modal-input:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    select.pub-modal-input {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659L8.753 11.14a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+
+    /* Share Link container */
+    .pub-share-link-container {
+        margin-top: 1.25rem;
+    }
+    .pub-share-link-container label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-dim, rgba(255, 255, 255, 0.5));
+      margin-bottom: 0.5rem;
+    }
+    .pub-share-link {
+        display: flex;
+        gap: 0.625rem;
+        align-items: center; 
+    }
+    .pub-share-link .pub-modal-input {
+        flex-grow: 1;
+        height: 36px; /* Match small button height */
+        padding: 0 1rem; /* Adjust padding for height */
+    }
+    
+    /* Share Modal Options */
+    .pub-share-options {
+        padding-bottom: 20px;
+    }
+    .pub-share-option-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+    .pub-share-option-item > label:first-child {
+        flex-shrink: 0;
+        flex-basis: 120px;
+        text-align: left;
+        color: var(--text-dim, rgba(255, 255, 255, 0.5));
+        font-size: 0.95rem; /* from pro_user */
+    }
+    .pub-share-option-item .pub-modal-input {
+        flex-grow: 1;
+    }
+    .pub-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+      top: 0; 
+    }
+    .pub-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .pub-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+    }
+    .pub-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+    }
+    input:checked + .pub-slider {
+      background-color: #1DB954; /* Green Switch */
+    }
+    input:focus + .pub-slider {
+      box-shadow: 0 0 1px #1DB954;
+    }
+    input:checked + .pub-slider:before {
+      transform: translateX(20px);
+    }
+    .pub-slider.pub-round {
+      border-radius: 24px;
+    }
+    .pub-slider.pub-round:before {
+      border-radius: 50%;
+    }
+    .pub-password-field-container {
+      position: relative;
+      flex-grow: 1;
+    }
+    .pub-password-toggle {
+      position: absolute;
+      right: 10px; 
+      top: 50%;   
+      transform: translateY(-50%);
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pub-password-toggle:hover {
+      opacity: 1;
+    }
+    .pub-password-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--white, #fff);
+      fill: none;
+      stroke-width: 2;
+    }
+    .pub-access-checkbox-group {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+      flex-grow: 1;
+    }
+    .pub-checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pub-checkbox-container input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: #333;
+      border: 1px solid #555;
+      border-radius: 4px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      position: relative;
+      transition: background-color: 0.3s ease;
+    }
+    .pub-checkbox-container input[type="checkbox"]:checked {
+      background-color: #1DB954; /* Green Switch */
+      border-color: #1DB954;
+    }
+    .pub-checkbox-container input[type="checkbox"]:checked::after {
+      content: '✔';
+      font-size: 12px;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .pub-checkbox-container input[type="checkbox"]:disabled {
+      cursor: not-allowed;
+      background-color: #222;
+      border-color: #444;
+    }
+    .pub-checkbox-container input[type="checkbox"]:disabled + label {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    .pub-checkbox-container label {
+      cursor: pointer;
+      user-select: none;
+      color: #888;
+      transition: color 0.3s ease;
+      font-size: 1rem; 
+      position: relative;
+      top: 0; 
+    }
+    .pub-checkbox-container input[type="checkbox"]:checked + label {
+      color: inherit;
+    }
+    
+    /* Media Queries for Popups */
+    @media (max-width: 768px) {
+      .public-upload-section {
+        padding: 80px 20px 120px 20px;
+      }
+      .pub-share-modal {
+         width: calc(100vw - 30px);
+         max-width: none;
+      }
+      .pub-modal-content {
+         /* padding: 20px; */ /* Handled by body */
+      }
+      .pub-modal-header h3 {
+         font-size: 1.2rem;
+      }
+      .pub-modal-actions {
+         flex-direction: row;
+         justify-content: flex-end; /* Match pro */
+         gap: 12px;
+         margin-top: 20px;
+      }
+      .pub-modal-actions .pub-btn {
+         flex: 0 1 auto; /* Don't grow */
+         height: 48px;
+         padding: 0 1.5rem; /* Match pro */
+         font-size: 0.875rem; /* Match pro */
+      }
+      .pub-share-option-item {
+        flex-wrap: wrap; 
+      }
+      .pub-share-option-item > label:first-child {
+        flex-basis: 100%; 
+        margin-bottom: -5px; 
+      }
+      .stats-container {
+        margin-top: 100px;
+      }
+    }
+    @media (max-width: 480px) {
+      .pub-upload-popup-slide {
+        padding: 2rem 1.5rem;
+      }
+      .pub-upload-popup {
+        max-width: calc(100% - 2rem);
+      }
+      .pub-upload-popup-header h3 {
+        font-size: 1.3rem;
+      }
+      .pub-share-modal {
+         width: calc(100vw - 20px);
+      }
+      .pub-modal-body {
+         padding: 2rem 1.5rem; /* from pro_user */
+      }
+      .pub-modal-header {
+         padding: 1.5rem 1.5rem; /* from pro_user */
+         margin-bottom: 0; /* from pro_user */
+      }
+      .pub-modal-header h3 {
+         font-size: 1.1rem;
+      }
+      .pub-modal-close {
+         font-size: 1.6rem;
+         width: 36px;
+         height: 36px;
+      }
+      .stats-container {
+        margin-top: 80px;
+      }
+    }
+    @media (max-width: 360px) {
+      .pub-share-modal {
+         width: calc(100vw - 16px);
+      }
+      .pub-modal-body {
+         padding: 1.5rem; /* from pro_user */
+      }
+      .pub-modal-header h3 {
+         font-size: 1rem;
+      }
+      .pub-share-link .pub-btn.pub-small {
+         font-size: 0.75rem;
+         height: 44px; /* Match input */
+      }
+      .pub-share-link .pub-modal-input {
+         height: 44px; /* Match button */
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <header>
+      <div class="header-content">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo">
+        <div class="hamburger-menu" id="hamburger-toggle">
+          <div class="hamburger-icon" id="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header"></div>
+      <div class="mobile-menu-items">
+        <a href="/about" class="mobile-menu-item">About</a>
+        <a href="/pricing" class="mobile-menu-item">Pricing</a>
+        <a href="/why-us" class="mobile-menu-item">Why Us?</a>
+        <a href="/contact" class="mobile-menu-item">Contact</a>
+        <a href="https://app.cloudxhq.com/login" class="mobile-menu-item">Login</a>
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-title-wrapper" id="hero-title-wrapper">
+          <div class="hero-title-container">
+            <h1 class="hero-title" id="hero-title">Secure<span class="dot period-dot"></span> Fast<span class="dot period-dot"></span><br>
+            M<span class="i-container">ı<span class="dot i-dot"></span></span>n<span class="i-container">ı<span class="dot i-dot"></span></span>mal<span class="i-container">ı<span class="dot i-dot"></span></span>st<span class="dot period-dot"></span></h1>
+          </div>
+        </div>
+        <p class="hero-subtitle">
+          Upload, forget the rest.<br>
+          The privacy-first cloud storage solution.
+        </p>
+        <div class="hero-cta">
+          <button class="btn success" onclick="window.location.href='/pricing'">Start Free</button>
+          <button class="btn" onclick="window.location.href='/about'">Learn More</button>
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Secure.</h3>
+          <p>Your files are protected with enterprise-grade AES-256 encryption on our secure servers. Industry-standard security keeping your data safe from unauthorized access.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Fast.</h3>
+          <p>Upload large files in seconds, sync instantly across all devices. Global infrastructure means your data is always accessible when you need it.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Minimalist.</h3>
+          <p>Intuitive interface designed for productivity. No unnecessary features or complexity, just seamless file management that works.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="public-upload-section">
+      <div class="upload-area-container" id="upload-area-container">
+        <div class="upload-box" id="upload-box">
+          <img src="{{ url_for('static', filename='icons/cloud-upload.svg') }}" alt="Upload" class="upload-box-icon">
+          <h3>Try It Now</h3>
+          <p>Upload files or folders (max 500 MB) to see our secure upload and share process in action. No account needed.</p>
+          <div class="upload-buttons">
+            <button class="btn" id="public-upload-file-btn">Upload File</button>
+            <button class="btn" id="public-upload-folder-btn">Upload Folder</button>
+          </div>
+        </div>
+        
+        <div class="email-link-box" id="email-link-box" style="display: none;">
+          <h3>Upload Complete!</h3>
+          <p>Your item <strong id="public-filename-success"></strong> is encrypted and ready.</p>
+          <p style="font-size: 15px; margin-bottom: 0; margin-top: -8px; opacity: 0.8;">First, generate a secure link to set your options.</p>
+          
+          <button class="btn" id="generate-link-btn">Generate Secure Link</button>
+
+          <form id="email-link-form">
+            <input type="email" id="public-email-input" class="pub-email-input" placeholder="Enter email to send your link" required>
+            <button type="submit" class="btn">Send</button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="stats-container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number">99.9%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">+ 10 <span class="stat-unit">MB/s</span></span>
+            <span class="stat-label">Transfer Speed</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">256-bit</span>
+            <span class="stat-label">Encryption</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Support</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <form id="public-upload-form" style="display: none;">
+      <input type="file" id="public-file-input" />
+      <input type="file" id="public-folder-input" webkitdirectory />
+    </form>
+    
+    <div class="pub-popup-overlay" id="upload-limit-overlay"></div>
+    <div class="pub-limit-popup" id="upload-limit-popup">
+      <button class="pub-close-popup" aria-label="Close popup">&times;</button>
+      <div class="pub-limit-popup-header"></div>
+      <h3 id="upload-limit-title">Upload Limit Exceeded</h3>
+      <p>Your selection (<span id="upload-limit-size"></span>) exceeds the 500 MB limit for public uploads.</p>
+      <a href="/pricing" class="btn">Create Account for Larger Uploads</a>
+    </div>
+
+    <div class="pub-upload-popup-overlay" id="upload-popup-overlay"></div>
+    <div class="pub-upload-popup" id="upload-popup">
+      <div class="pub-upload-popup-content-wrapper">
+        <div class="pub-upload-popup-slide" id="upload-progress-slide">
+          <div class="pub-upload-popup-header">
+            <h3 id="upload-popup-title">Uploading...</h3>
+            <p>Your files are being securely encrypted and scanned.</p>
+          </div>
+          <div class="pub-upload-progress-info">
+            <span class="pub-upload-filename" id="upload-popup-filename"></span>
+            <div class="pub-upload-progress-bar-container">
+              <div class="pub-upload-progress-bar" id="upload-popup-bar"></div>
+            </div>
+            <div class="pub-upload-stats">
+              <span id="upload-popup-details">
+                <span id="upload-popup-percent">0%</span>
+                (<span id="upload-popup-count">File 0 of 0</span>)
+              </span>
+              <span>
+                <span id="upload-popup-speed">0 KB/s</span>
+                -
+                <span id="upload-popup-elapsed">0s</span>
+              </span>
+            </div>
+          </div>
+          <div class="pub-upload-popup-footer">
+            <button id="upload-cancel-btn">Cancel</button>
+          </div>
+        </div>
+        <div class="pub-upload-popup-slide" id="upload-results-slide">
+          <div class="pub-upload-popup-header">
+            <h3 id="upload-results-title">Scan Complete</h3>
+            <p id="upload-results-message">Some files were blocked.</p>
+          </div>
+          <div class="pub-virus-file-list" id="upload-virus-list" style="display: none;"></div>
+          <div class="pub-upload-popup-footer">
+            <button id="upload-close-btn">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pub-modal-overlay" id="modal-overlay"></div>
+    
+    <div class="pub-share-modal" id="share-modal">
+      <div class="pub-modal-content">
+        <div class="pub-modal-header">
+          <h3>Share Item</h3>
+          <button class="pub-modal-close">&times;</button>
+        </div>
+        <div class="pub-modal-body">
+          <form id="share-form">
+            <input type="hidden" id="share-path" name="path">
+            <p id="share-modal-message">Generate a secure link to share your file.</p>
+            
+            <div class="pub-share-options">
+              <div class="pub-share-option-item">
+                <label>Access:</label>
+                <div class="pub-access-checkbox-group">
+                  <div class="pub-checkbox-container">
+                    <input type="checkbox" id="access-preview" name="access_preview" checked>
+                    <label for="access-preview">Preview</label>
+                  </div>
+                  <div class="pub-checkbox-container">
+                    <input type="checkbox" id="access-download" name="access_download" checked>
+                    <label for="access-download">Download</label>
+                  </div>
+                </div>
+              </div>
+              <div class="pub-share-option-item">
+                <label for="expiry-select">Link expires in:</label>
+                <select id="expiry-select" name="expiry" class="pub-modal-input" disabled>
+                  <option value="1">1 hour</option>
+                  <option value="24" selected>1 day (24 hours)</option>
+                  <option value="168">1 week (7 days)</option>
+                  <option value="720">1 month (30 days)</option>
+                </select>
+                <label class="pub-switch">
+                  <input type="checkbox" id="expiry-switch">
+                  <span class="pub-slider pub-round"></span>
+                </label>
+              </div>
+              <div class="pub-share-option-item">
+                <label for="password-input">Password:</label>
+                <div class="pub-password-field-container">
+                  <input type="password" id="password-input" name="password" class="pub-modal-input" placeholder="Optional" disabled>
+                  <div class="pub-password-toggle" id="share-password-toggle">
+                    <svg id="share-eye-icon" viewBox="0 0 24 24">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  </div>
+                </div>
+                <label class="pub-switch">
+                  <input type="checkbox" id="password-switch">
+                  <span class="pub-slider pub-round"></span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="pub-share-link-container" id="share-link-container" style="display:none;">
+              <label>Your shareable link:</label>
+              <div class="pub-share-link">
+                <input type="text" id="share-url" class="pub-modal-input" readonly>
+                <button type="button" id="copy-link-btn" class="pub-btn pub-small">Copy</button>
+              </div>
+            </div>
+            
+            <div class="pub-modal-actions">
+              <button type="submit" class="pub-btn" id="create-link-btn">Create Link</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="footer-content">
+        <p><a class="nav-linky"> CloudX &copy; 2025 </a> | <a href="/privacy" class="nav-link"> Privacy Policy </a> | <a href="/terms" class="nav-link">Terms of Service</a></p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Mobile Menu Functionality
+    const toggle = document.getElementById("hamburger-toggle");
+    const icon = document.getElementById("hamburger-icon");
+    const menu = document.getElementById("mobile-menu");
+    const overlay = document.getElementById("mobile-menu-overlay");
+    const body = document.body;
+
+    function closeMenu() {
+      icon.classList.remove("active");
+      menu.classList.remove("active");
+      overlay.classList.remove("active");
+      body.classList.remove("menu-active");
+      document.body.style.overflow = '';
+    }
+
+    function openMenu() {
+      icon.classList.add("active");
+      menu.classList.add("active");
+      overlay.classList.add("active");
+      body.classList.add("menu-active");
+      document.body.style.overflow = 'hidden';
+    }
+
+    toggle.addEventListener('click', () => menu.classList.contains('active') ? closeMenu() : openMenu());
+    overlay.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu-item, .nav-link').forEach(link => link.addEventListener('click', closeMenu));
+
+    // Smooth Scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scroll Effects
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // PUBLIC UPLOAD SCRIPT
+    document.addEventListener('DOMContentLoaded', () => {
+      const PUBLIC_UPLOAD_LIMIT = 500 * 1024 * 1024;
+      const CHUNK_SIZE = 8 * 1024 * 1024;
+      
+      let isUploadCancelled = false;
+      let currentUploadXHRs = [];
+      let originalUploadedItemName = null;
+      let uniqueUploadedItemName = null;
+      let publicShareUrl = null;
+      let publicShareSettings = null;
+      let isFolderUpload = false;
+
+      const fileInput = document.getElementById('public-file-input');
+      const folderInput = document.getElementById('public-folder-input');
+      const uploadFileBtn = document.getElementById('public-upload-file-btn');
+      const uploadFolderBtn = document.getElementById('public-upload-folder-btn');
+      
+      const limitPopup = document.getElementById('upload-limit-popup');
+      const limitOverlay = document.getElementById('upload-limit-overlay');
+      const limitTitle = document.getElementById('upload-limit-title');
+      const limitSizeSpan = document.getElementById('upload-limit-size');
+      // *** MODIFIED JS ***
+      const limitCloseBtn = limitPopup.querySelector('.pub-close-popup');
+
+      const uploadPopup = {
+        overlay: document.getElementById('upload-popup-overlay'),
+        popup: document.getElementById('upload-popup'),
+        // *** MODIFIED JS ***
+        wrapper: document.querySelector('.pub-upload-popup-content-wrapper'),
+        title: document.getElementById('upload-popup-title'),
+        filename: document.getElementById('upload-popup-filename'),
+        bar: document.getElementById('upload-popup-bar'),
+        percent: document.getElementById('upload-popup-percent'),
+        count: document.getElementById('upload-popup-count'),
+        speed: document.getElementById('upload-popup-speed'),
+        elapsed: document.getElementById('upload-popup-elapsed'),
+        cancelBtn: document.getElementById('upload-cancel-btn'),
+        closeBtn: document.getElementById('upload-close-btn'),
+        resultsTitle: document.getElementById('upload-results-title'),
+        resultsMessage: document.getElementById('upload-results-message'),
+        virusList: document.getElementById('upload-virus-list')
+      };
+      
+      const shareModal = document.getElementById('share-modal');
+      const modalOverlay = document.getElementById('modal-overlay');
+      
+      const uploadBox = document.getElementById('upload-box');
+      const emailBox = document.getElementById('email-link-box');
+      const emailForm = document.getElementById('email-link-form');
+      const generateLinkBtn = document.getElementById('generate-link-btn');
+
+      function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+      }
+
+      function showUploadLimitPopup(message, title = "Upload Limit Exceeded") {
+        limitSizeSpan.textContent = message;
+        limitTitle.textContent = title;
+        limitPopup.classList.add('active');
+        limitOverlay.classList.add('active');
+      }
+      
+      function closeLimitPopup() {
+        limitPopup.classList.remove('active');
+        limitOverlay.classList.remove('active');
+      }
+      
+      function showUploadPopup(isFolder = false) {
+        isUploadCancelled = false;
+        uploadPopup.title.textContent = isFolder ? "Uploading Folder..." : "Uploading File...";
+        uploadPopup.filename.textContent = 'Preparing upload...';
+        uploadPopup.bar.style.width = '0%';
+        uploadPopup.percent.textContent = '0%';
+        uploadPopup.count.textContent = 'File 0 of 0';
+        uploadPopup.speed.textContent = '...';
+        uploadPopup.elapsed.textContent = '...';
+        uploadPopup.overlay.classList.add('active');
+        uploadPopup.popup.classList.add('active');
+        uploadPopup.wrapper.style.transform = 'translateX(0%)';
+        uploadPopup.virusList.style.display = 'none';
+        uploadPopup.virusList.innerHTML = '';
+      }
+
+      function hideUploadPopup() {
+        uploadPopup.overlay.classList.remove('active');
+        uploadPopup.popup.classList.remove('active');
+      }
+
+      function updateUploadPopup({ filename, percent, fileCount, speed, elapsed }) {
+        uploadPopup.filename.textContent = filename;
+        uploadPopup.bar.style.width = `${percent}%`;
+        uploadPopup.percent.textContent = `${percent}%`;
+        uploadPopup.count.textContent = fileCount;
+        uploadPopup.speed.textContent = speed;
+        uploadPopup.elapsed.textContent = elapsed;
+      }
+
+      function showUploadResults(maliciousFiles = []) {
+        if (maliciousFiles.length > 0) {
+          uploadPopup.resultsTitle.textContent = 'Upload Blocked';
+          uploadPopup.resultsMessage.textContent = `Our scanner detected potential threats in ${maliciousFiles.length} file(s):`;
+          // *** MODIFIED JS ***
+          uploadPopup.virusList.innerHTML = maliciousFiles.map(name => 
+            `<div class="pub-virus-file-item"><i class="material-icons">dangerous</i><span>${name}</span></div>`
+          ).join('');
+          uploadPopup.virusList.style.display = 'block';
+        }
+        uploadPopup.wrapper.style.transform = 'translateX(-50%)';
+      }
+      
+      function openModal(modal) {
+        modal.classList.add('active');
+        modalOverlay.classList.add('active');
+      }
+      
+      function closeModals() {
+        // *** MODIFIED JS ***
+        document.querySelectorAll('.pub-share-modal.active').forEach(m => m.classList.remove('active'));
+        modalOverlay.classList.remove('active');
+      }
+
+      uploadFileBtn.addEventListener('click', () => fileInput.click());
+      uploadFolderBtn.addEventListener('click', () => folderInput.click());
+      
+      fileInput.addEventListener('change', (e) => handlePublicUpload(e.target.files, false));
+      folderInput.addEventListener('change', (e) => handlePublicUpload(e.target.files, true));
+      
+      async function handlePublicUpload(files, isFolder) {
+        if (!files || files.length === 0) return;
+
+        isFolderUpload = isFolder;
+        let fileList = Array.from(files);
+        let totalUploadSize = fileList.reduce((acc, file) => acc + file.size, 0);
+        
+        if (isFolder) {
+          originalUploadedItemName = fileList[0].webkitRelativePath.split('/')[0];
+          uniqueUploadedItemName = originalUploadedItemName;
+        } else {
+          originalUploadedItemName = fileList[0].name;
+          uniqueUploadedItemName = null;
+        }
+
+        fileInput.value = '';
+        folderInput.value = '';
+
+        if (totalUploadSize > PUBLIC_UPLOAD_LIMIT) {
+          showUploadLimitPopup(formatBytes(totalUploadSize));
+          return;
+        }
+
+        showUploadPopup(isFolder);
+        
+        const totalFiles = fileList.length;
+        const startTime = Date.now();
+        let maliciousFiles = [];
+        let cumulativeUploadedSize = 0;
+        let success = false;
+        
+        currentUploadXHRs = [];
+
+        for (let i = 0; i < totalFiles; i++) {
+          if (isUploadCancelled) break;
+          
+          const file = fileList[i];
+          const relativePath = file.webkitRelativePath || file.name;
+          const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+          let fileFailed = false;
+
+          for (let chunkNumber = 0; chunkNumber < totalChunks; chunkNumber++) {
+            if (isUploadCancelled) break;
+            
+            const chunk = file.slice(chunkNumber * CHUNK_SIZE, (chunkNumber + 1) * CHUNK_SIZE);
+            const formData = new FormData();
+            formData.append("file", chunk);
+            formData.append("filename", file.name);
+            formData.append("totalSize", file.size);
+            formData.append("chunkNumber", chunkNumber);
+            formData.append("totalChunks", totalChunks);
+            formData.append("relative_path", relativePath);
+
+            try {
+              const result = await uploadChunk(formData, (progress) => {
+                let chunkUploaded = chunkNumber * CHUNK_SIZE + progress.loaded;
+                let totalUploaded = cumulativeUploadedSize + chunkUploaded;
+                const percent = Math.min(100, Math.round((totalUploaded / totalUploadSize) * 100));
+                
+                const elapsedTimeMs = Date.now() - startTime;
+                const elapsedTimeSeconds = Math.round(elapsedTimeMs / 1000);
+                const uploadSpeedMBps = elapsedTimeMs > 0 ? (totalUploaded / (1024 * 1024)) / (elapsedTimeMs / 1000) : 0;
+                let speedString = uploadSpeedMBps >= 1 ? `${uploadSpeedMBps.toFixed(1)} MB/s` : `${(uploadSpeedMBps * 1024).toFixed(0)} KB/s`;
+                
+                updateUploadPopup({
+                  filename: file.name,
+                  percent: percent,
+                  fileCount: `File ${i + 1} of ${totalFiles}`,
+                  speed: speedString,
+                  elapsed: `${elapsedTimeSeconds}s`
+                });
+              });
+              
+              if (!result.success) {
+                if (result.message === 'virus_detected') {
+                  maliciousFiles.push(result.filename || file.name);
+                  fileFailed = true;
+                  break;
+                } else {
+                  throw new Error(result.message);
+                }
+              }
+              
+              if (result.filename && !isFolderUpload) {
+                uniqueUploadedItemName = result.filename;
+              }
+              
+            } catch (error) {
+              if (!isUploadCancelled) {
+                alert(`Upload failed for ${file.name}: ${error.message}`);
+                hideUploadPopup();
+              }
+              return;
+            }
+          }
+          
+          if (fileFailed) continue;
+          
+          cumulativeUploadedSize += file.size;
+          success = true;
+        }
+        
+        if (isUploadCancelled) {
+          hideUploadPopup();
+          return;
+        }
+
+        if (maliciousFiles.length > 0) {
+          showUploadResults(maliciousFiles);
+          return;
+        }
+        
+        if (success) {
+          updateUploadPopup({
+            filename: isFolder ? originalUploadedItemName : fileList[0].name,
+            percent: 100,
+            fileCount: `File ${totalFiles} of ${totalFiles}`,
+            speed: "Done",
+            elapsed: `${Math.round((Date.now() - startTime) / 1000)}s`
+          });
+          
+          setTimeout(() => {
+            hideUploadPopup();
+            uploadBox.style.display = 'none';
+            emailBox.style.display = 'block';
+            document.getElementById('public-filename-success').textContent = originalUploadedItemName;
+          }, 1000);
+        } else {
+          hideUploadPopup();
+        }
+      }
+      
+      function uploadChunk(formData, onProgress) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          currentUploadXHRs.push(xhr);
+          
+          xhr.open('POST', '/public-upload', true);
+          
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              onProgress({ loaded: e.loaded, total: e.total });
+            }
+          };
+          
+          xhr.onload = () => {
+            currentUploadXHRs = currentUploadXHRs.filter(x => x !== xhr);
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve(JSON.parse(xhr.responseText));
+            } else {
+              reject(new Error(xhr.statusText || 'Upload failed'));
+            }
+          };
+          
+          xhr.onerror = () => {
+            currentUploadXHRs = currentUploadXHRs.filter(x => x !== xhr);
+            reject(new Error('Network error'));
+          };
+          
+          xhr.onabort = () => {
+            currentUploadXHRs = currentUploadXHRs.filter(x => x !== xhr);
+            reject(new Error('Upload cancelled'));
+          };
+          
+          xhr.send(formData);
+        });
+      }
+      
+      uploadPopup.cancelBtn.addEventListener('click', () => {
+        isUploadCancelled = true;
+        [...currentUploadXHRs].forEach(xhr => xhr.abort());
+        currentUploadXHRs = [];
+        hideUploadPopup();
+      });
+      
+      uploadPopup.closeBtn.addEventListener('click', () => {
+        hideUploadPopup();
+      });
+      
+      limitCloseBtn.addEventListener('click', closeLimitPopup);
+      limitOverlay.addEventListener('click', closeLimitPopup);
+
+      generateLinkBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        setupShareModal();
+        openModal(shareModal);
+      });
+      
+      emailForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('public-email-input').value;
+        const btn = e.target.querySelector('button');
+        const originalText = btn.textContent;
+
+        if (!publicShareUrl) {
+          alert("Please generate a share link first.\n\nClick the 'Generate Secure Link' button above to set your password and expiration options, then you can email it.");
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+
+        try {
+          const emailResponse = await fetch('/public-email-link', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: email,
+              url: publicShareUrl,
+              filename: originalUploadedItemName
+            })
+          });
+
+          if (!emailResponse.ok) throw new Error("Email server failed.");
+          
+          btn.textContent = 'Sent!';
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            document.getElementById('public-email-input').value = "";
+          }, 2000);
+
+        } catch (err) {
+          alert('Error sending email. Please try again. ' + err.message);
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      });
+
+      function setupShareModal() {
+        const form = document.getElementById('share-form');
+        const createBtn = document.getElementById('create-link-btn');
+        const linkContainer = document.getElementById('share-link-container');
+        const urlInput = document.getElementById('share-url');
+        
+        const expirySelect = document.getElementById('expiry-select');
+        const expirySwitch = document.getElementById('expiry-switch');
+        const passwordInput = document.getElementById('password-input');
+        const passwordSwitch = document.getElementById('password-switch');
+        const passwordToggle = document.getElementById('share-password-toggle');
+        
+        const accessPreview = document.getElementById('access-preview');
+        const accessDownload = document.getElementById('access-download');
+
+        const shareName = isFolderUpload ? originalUploadedItemName : uniqueUploadedItemName;
+        document.getElementById('share-path').value = shareName;
+        document.getElementById('share-modal-message').textContent = `Sharing: ${originalUploadedItemName}`;
+
+        if (publicShareSettings && publicShareUrl) {
+          form.reset();
+          
+          accessPreview.checked = publicShareSettings.permissions.includes('preview');
+          accessDownload.checked = publicShareSettings.permissions.includes('download');
+          
+          if (publicShareSettings.expiry > 0) {
+            expirySwitch.checked = true;
+            expirySelect.disabled = false;
+            expirySelect.value = publicShareSettings.expiry;
+          } else {
+            expirySwitch.checked = false;
+            expirySelect.disabled = true;
+          }
+          
+          if (publicShareSettings.password !== null) {
+            passwordSwitch.checked = true;
+            passwordInput.disabled = false;
+            passwordInput.value = publicShareSettings.password;
+          } else {
+            passwordSwitch.checked = false;
+            passwordInput.disabled = true;
+            passwordInput.value = '';
+          }
+
+          urlInput.value = publicShareUrl;
+          linkContainer.style.display = 'block';
+          createBtn.textContent = 'Update Link';
+          
+        } else {
+          form.reset();
+          linkContainer.style.display = 'none';
+          createBtn.textContent = 'Create Link';
+          expirySelect.disabled = true;
+          expirySwitch.checked = false;
+          passwordInput.disabled = true;
+          passwordSwitch.checked = false;
+
+          if (isFolderUpload) {
+            accessPreview.checked = false;
+            accessPreview.disabled = true;
+            accessDownload.checked = true;
+            accessDownload.disabled = false;
+          } else {
+            accessPreview.checked = true;
+            accessPreview.disabled = false;
+            accessDownload.checked = true;
+            accessDownload.disabled = false;
+          }
+        }
+        
+        expirySwitch.onchange = () => { expirySelect.disabled = !expirySwitch.checked; };
+        passwordSwitch.onchange = () => { passwordInput.disabled = !passwordSwitch.checked; };
+        
+        passwordToggle.onclick = () => {
+          const icon = document.getElementById('share-eye-icon');
+          if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+          } else {
+            passwordInput.type = 'password';
+            icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+          }
+        };
+        
+        // *** MODIFIED JS ***
+        document.querySelectorAll('.pub-modal-close, .pub-modal-overlay').forEach(el => {
+          el.onclick = closeModals;
+        });
+        
+        form.onsubmit = async (e) => {
+          e.preventDefault();
+          createBtn.disabled = true;
+          createBtn.textContent = 'Processing...';
+          
+          if (!accessPreview.checked && !accessDownload.checked) {
+            alert("Please select at least one access option.");
+            createBtn.disabled = false;
+            createBtn.textContent = 'Create Link';
+            return;
+          }
+          
+          const permissions = [
+            accessPreview.checked ? 'preview' : null,
+            accessDownload.checked ? 'download' : null
+          ].filter(Boolean).join(',');
+
+          const body = {
+            path: isFolderUpload ? originalUploadedItemName : uniqueUploadedItemName,
+            permissions: permissions,
+            expiry: expirySwitch.checked ? expirySelect.value : 0,
+            password: passwordSwitch.checked ? (passwordInput.value || "") : null
+          };
+          
+          try {
+            const response = await fetch('/public-share', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+              publicShareUrl = result.url;
+              publicShareSettings = body;
+
+              urlInput.value = result.url;
+              // *** MODIFIED JS ***
+              linkContainer.style.display = 'block';
+              createBtn.textContent = 'Link Updated!';
+              setTimeout(() => {
+                createBtn.textContent = 'Update Link';
+                closeModals();
+              }, 2000);
+            } else {
+              alert('Error: ' + result.message);
+              createBtn.textContent = publicShareUrl ? 'Update Link' : 'Create Link';
+            }
+          } catch (err) {
+            alert('An error occurred.');
+            createBtn.textContent = publicShareUrl ? 'Update Link' : 'Create Link';
+          } finally {
+            createBtn.disabled = false;
+          }
+        };
+        
+        document.getElementById('copy-link-btn').onclick = () => {
+          urlInput.select();
+          document.execCommand('copy');
+          const btn = document.getElementById('copy-link-btn');
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+        };
+      }
+    });
+  </script>
+</body>
+</html>

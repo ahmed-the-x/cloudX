@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing - CloudX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='website.css') }}" />
+  <style>
+    /* Additional Pricing Specific Styles */
+    .hero-section {
+      padding-top: 8rem;
+      padding-bottom: 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .hero-content {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .plans-design1 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      max-width: 1600px;
+      margin: 0 auto 6rem;
+    }
+
+    .plan-design1 {
+      background: #0a0a0a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1.5rem;
+      padding: 3rem 2.5rem;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-design1:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .plan-design1.featured {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+    }
+
+    .plan-badge-design1 {
+      position: absolute;
+      top: -0.75rem;
+      right: 2rem;
+      background: #ffffff;
+      color: #000000;
+      padding: 0.25rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .plan-header-design1 {
+      margin-bottom: 2.5rem;
+    }
+
+    .plan-name-design1 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 1rem;
+    }
+
+    .plan-price-design1 {
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .plan-price-design1 .currency {
+      font-size: 1.5rem;
+      font-weight: 300;
+    }
+
+    .plan-price-design1 .amount {
+      font-size: 4rem;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .plan-interval-design1 {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+    }
+
+    .plan-features-design1 {
+      list-style: none;
+      margin-bottom: 2.5rem;
+      flex-grow: 1;
+    }
+
+    .plan-features-design1 li {
+      padding: 0.875rem 0;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.95rem;
+      font-weight: 300;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      transition: color 0.2s;
+    }
+
+    .plan-features-design1 li:last-child {
+      border-bottom: none;
+    }
+
+    .plan-features-design1 li:hover {
+      color: #ffffff;
+    }
+
+    .plan-features-design1 li.unavailable {
+      color: rgba(255, 255, 255, 0.15);
+    }
+
+    .plan-btn-design1 {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: transparent;
+      color: #ffffff;
+      font-size: 0.875rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      border-radius: 0.75rem;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .plan-btn-design1:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+    }
+
+    /* FAQ Section */
+    .faq {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .faq-header h2 {
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-item {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 0.75rem;
+    }
+
+    .faq-answer {
+      color: var(--text-dim);
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .plans-design1 {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.2rem;
+      }
+      
+      .plan-design1 {
+        padding: 2.5rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .plans-design1 {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
+      
+      .plan-design1 {
+        padding: 2rem 1.2rem;
+      }
+      
+      .plan-price-design1 .amount {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 950px) {
+      .plans-design1 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+      
+      .plan-design1 {
+        padding: 2.5rem 2rem;
+      }
+      
+      .plan-price-design1 .amount {
+        font-size: 4rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .plans-design1 {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+      }
+
+      .hero-section {
+        padding-top: 6rem;
+        padding-bottom: 3rem;
+      }
+
+      .hero-content {
+        margin-bottom: 3rem;
+      }
+
+      .plan-design1 {
+        padding: 2.5rem 2rem;
+      }
+
+      .plan-price-design1 .amount {
+        font-size: 3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-section {
+        padding-top: 5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .plan-design1 {
+        padding: 2rem 1.5rem;
+        border-radius: 1.25rem;
+      }
+
+      .plan-badge-design1 {
+        right: 1.5rem;
+        font-size: 0.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-container">
+    <header>
+      <div class="header-content">
+<a href="/" class="logo">
+  <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo">
+</a>
+        <div class="hamburger-menu" id="hamburger-toggle">
+          <div class="hamburger-icon" id="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+      <div class="mobile-menu-header">
+      </div>
+      <div class="mobile-menu-items">
+        <a href="/about" class="mobile-menu-item">About</a>
+        <a href="/pricing" class="mobile-menu-item">Pricing</a>
+        <a href="/why-us" class="mobile-menu-item">Why Us?</a>
+        <a href="/contact" class="mobile-menu-item">Contact</a>
+<a href="https://app.cloudxhq.com/login" class="mobile-menu-item">Login</a>      
+      </div>
+    </div>
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Choose your plan</h1>
+        <p class="hero-subtitle">Flexible pricing. Cancel anytime.</p>
+      </div>
+
+      <section class="plans-design1">
+        <!-- Free Plan -->
+        <div class="plan-design1">
+          <div class="plan-header-design1">
+            <div class="plan-name-design1">Free</div>
+            <div class="plan-price-design1">
+              <span class="currency">$</span>
+              <span class="amount">0</span>
+            </div>
+            <div class="plan-interval-design1">forever</div>
+          </div>
+          <ul class="plan-features-design1">
+            <li>5 GB Secure Storage</li>
+            <li>1 GB max File Upload</li>
+            <li>Data Encryption</li>
+            <li>Virus Scan</li>
+            <li class="unavailable">High-speed Transfers</li>
+            <li class="unavailable">Advanced Sharing Controls</li>
+            <li class="unavailable">Password-protected Links</li>
+            <li class="unavailable">Link Expiration Date</li>
+            <li class="unavailable">Real-time Links Analytics</li>
+          </ul>
+          <form action="{{ url_for('pricing') }}" method="POST" style="width: 100%;">
+            <input type="hidden" name="plan" value="free">
+<button type="button" class="plan-btn-design1" onclick="window.location.href='https://app.cloudxhq.com/register';">Get Started</button>
+          </form>
+        </div>
+
+        <!-- Basic Plan -->
+        <div class="plan-design1">
+          <div class="plan-header-design1">
+            <div class="plan-name-design1">Basic</div>
+            <div class="plan-price-design1">
+              <span class="currency">$</span>
+              <span class="amount">0.99</span>
+            </div>
+            <div class="plan-interval-design1">per month</div>
+          </div>
+          <ul class="plan-features-design1">
+            <li>50 GB Secure Storage</li>
+            <li>5 GB max File Upload</li>
+            <li>Data Encryption</li>
+            <li>Virus Scan</li>
+            <li>High-speed Transfers</li>
+            <li>Advanced Sharing Controls</li>
+            <li class="unavailable">Password-protected Links</li>
+            <li class="unavailable">Link Expiration Date</li>
+            <li class="unavailable">Real-time Links Analytics</li>
+          </ul>
+          <form action="{{ url_for('pricing') }}" method="POST" style="width: 100%;">
+            <input type="hidden" name="plan" value="basic">
+<button type="button" class="plan-btn-design1" onclick="window.location.href='https://app.cloudxhq.com/register';">Upgrade to Basic</button>
+          </form>
+        </div>
+
+        <!-- Plus Plan -->
+        <div class="plan-design1 featured">
+          <span class="plan-badge-design1">Popular</span>
+          <div class="plan-header-design1">
+            <div class="plan-name-design1">Plus</div>
+            <div class="plan-price-design1">
+              <span class="currency">$</span>
+              <span class="amount">2.99</span>
+            </div>
+            <div class="plan-interval-design1">per month</div>
+          </div>
+          <ul class="plan-features-design1">
+            <li>200 GB Secure Storage</li>
+            <li>20 GB max File Upload</li>
+            <li>Data Encryption</li>
+            <li>Virus Scan</li>
+            <li>Ultra-fast Transfers</li>
+            <li>Advanced Sharing Controls</li>
+            <li>Password-protected Links</li>
+            <li>Link Expiration Date</li>
+            <li class="unavailable">Real-time Links Analytics</li>
+          </ul>
+          <form action="{{ url_for('pricing') }}" method="POST" style="width: 100%;">
+            <input type="hidden" name="plan" value="plus">
+<button type="button" class="plan-btn-design1" onclick="window.location.href='https://app.cloudxhq.com/register';">Upgrade to Plus</button>
+          </form>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="plan-design1">
+          <div class="plan-header-design1">
+            <div class="plan-name-design1">Pro</div>
+            <div class="plan-price-design1">
+              <span class="currency">$</span>
+              <span class="amount">4.99</span>
+            </div>
+            <div class="plan-interval-design1">per month</div>
+          </div>
+          <ul class="plan-features-design1">
+            <li>500 GB Secure Storage</li>
+            <li>50 GB max File Upload</li>
+            <li>Data Encryption</li>
+            <li>Virus Scan</li>
+            <li>Maximum Speed Transfers</li>
+            <li>Advanced Sharing Controls</li>
+            <li>Password-protected Links</li>
+            <li>Link Expiration Date</li>
+            <li>Real-time Links Analytics</li>
+          </ul>
+          <form action="{{ url_for('pricing') }}" method="POST" style="width: 100%;">
+            <input type="hidden" name="plan" value="pro">
+<button type="button" class="plan-btn-design1" onclick="window.location.href='https://app.cloudxhq.com/register';">Upgrade to Pro</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="faq">
+        <div class="faq-header">
+          <h2>Questions</h2>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Can I change my plan?</div>
+          <div class="faq-answer">Yes. Upgrade anytime and changes take effect immediately.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Can I downgrade?</div>
+          <div class="faq-answer">Cancel your subscription from Account Settings. Your files remain safe.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">What happens to my files if I downgrade?</div>
+          <div class="faq-answer">All files remain accessible. If you exceed the new limit, you'll need to delete files before uploading new ones.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Payment methods?</div>
+          <div class="faq-answer">All major credit cards and PayPal accepted.</div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p><span class="nav-linky"> CloudX &copy; 2025 </span> | <a href="/privacy" class="nav-link"> Privacy Policy </a> | <a href="/terms" class="nav-link">Terms of Service</a></p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Mobile Menu Functionality
+    const toggle = document.getElementById("hamburger-toggle");
+    const icon = document.getElementById("hamburger-icon");
+    const menu = document.getElementById("mobile-menu");
+    const overlay = document.getElementById("mobile-menu-overlay");
+    const body = document.body;
+
+    function closeMenu() {
+      icon.classList.remove("active");
+      menu.classList.remove("active");
+      overlay.classList.remove("active");
+      body.classList.remove("menu-active");
+      document.body.style.overflow = '';
+    }
+
+    function openMenu() {
+      icon.classList.add("active");
+      menu.classList.add("active");
+      overlay.classList.add("active");
+      body.classList.add("menu-active");
+      document.body.style.overflow = 'hidden';
+    }
+
+    toggle.addEventListener('click', () => menu.classList.contains('active') ? closeMenu() : openMenu());
+    overlay.addEventListener('click', closeMenu);
+    document.querySelectorAll('.mobile-menu-item, .nav-link').forEach(link => link.addEventListener('click', closeMenu));
+
+    // Smooth Scrolling for Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Scroll Effects
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }, { passive: true });
+
+    // Plan button click animations
+    document.querySelectorAll('.plan-btn-design1').forEach(button => {
+      button.addEventListener('click', function(e) {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 150);
+      });
+    });
+  </script>
+</body>
+</html>

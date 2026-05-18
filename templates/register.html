@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - CloudX</title>
+    <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray: #1a1a1a;
+            --danger: #ff0000;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+            padding: 2.5rem;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .form-wrapper {
+            transition: transform 0.5s ease-in-out, opacity 0.4s ease-in-out;
+            width: 100%;
+        }
+        
+        /* Show form immediately */
+        #register-form-wrapper {
+            visibility: visible;
+        }
+
+        #captcha-form-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: inherit;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container.show-captcha #register-form-wrapper {
+            transform: translateX(-100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container.show-captcha #captcha-form-wrapper {
+            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #duplicate-found-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: inherit;
+            box-sizing: border-box;
+            transform: translateX(100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container.show-duplicate #register-form-wrapper,
+        .auth-container.show-duplicate #captcha-form-wrapper {
+            transform: translateX(-100%);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .auth-container.show-duplicate #duplicate-found-wrapper {
+            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .form-description {
+            font-size: 1rem;
+            color: #8a8a8a;
+            margin: 40px 0 20px 0;
+            line-height: 1.4;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .input-field {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--white);
+            color: var(--white);
+            padding: 14px 0 10px 0;
+            width: 100%;
+            font-size: 1.1rem;
+            height: 44px;
+            box-sizing: border-box;
+        }
+
+        .input-field::placeholder {
+            color: var(--white);
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-bottom-color: var(--white);
+        }
+
+        .password-field-container {
+            position: relative;
+        }
+
+        .btn {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--white);
+            padding: 0 25px;
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0; 
+            height: 44px;
+            box-sizing: border-box;
+            line-height: 1;
+            position: relative;
+        }
+
+        .btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .btn.btn-primary {
+            background: var(--white);
+            color: var(--black);
+        }
+        .btn.btn-primary:hover {
+            background: transparent;
+            color: var(--white);
+        }
+
+        .btn.btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+        .btn.btn-secondary:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+
+        .flash-message {
+            background: var(--gray);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 0;
+            top: 60%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        .password-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--white);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .logo-img {
+          max-width: 180px;
+          width: 100%;
+          height: auto;
+          display: block;
+          margin: 0 auto 70px auto;
+        }
+
+        #recaptcha-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .captcha-text {
+            font-size: 0.9rem;
+            color: #8a8a8a;
+            margin: 20px 0;
+            line-height: 1.4;
+        }
+
+        /* Duplicate screen styling */
+        .duplicate-icon-wrapper {
+            display: block;
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px auto;
+        }
+
+        .duplicate-icon-wrapper img {
+            width: 100%;
+            height: 100%;
+            filter: brightness(0) invert(1); /* Makes SVG white */
+        }
+
+        .duplicate-title {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--white);
+            margin: 0 0 20px 0;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+        }
+
+        .duplicate-description {
+            font-size: 1rem;
+            color: #8a8a8a;
+            line-height: 1.6;
+            margin: 0 auto 40px auto;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .duplicate-actions {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        
+        .duplicate-actions .btn {
+            flex: 1;
+        }
+
+        .duplicate-help {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 30px;
+            line-height: 1.5;
+            letter-spacing: 0.05rem;
+            text-align: center;
+        }
+
+        .password-error {
+            color: var(--danger);
+            font-size: 0.8rem;
+            text-align: left;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .email-error {
+            color: var(--danger);
+            font-size: 0.8rem;
+            text-align: left;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .name-error {
+            color: var(--danger);
+            font-size: 0.8rem;
+            text-align: left;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        /* NEW: Additional spacing for captcha page */
+        .captcha-content {
+            margin-top: 80px;
+        }
+        
+        .captcha-instructions {
+            font-size: 0.9rem;
+            color: #8a8a8a;
+            margin: 15px 0 25px 0;
+            line-height: 1.5;
+            text-align: center;
+        }
+        
+        .captcha-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .test-warning {
+            font-size: 0.8rem;
+            color: #ffcc00;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        /* Ensure consistent spacing below the logo across all states */
+/* Add these CSS rules to your existing <style> section in register.html */
+
+.nav-linky {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover, .nav-link:active {
+    color: #ffffff;
+}
+
+.nav-link:hover::after, .nav-link:active::after {
+    width: 100%;
+}
+
+        @media (max-width: 768px) { 
+            .logo-img { max-width: 150px; }
+            .duplicate-title { font-size: 1.2rem; }
+            .duplicate-description { font-size: 0.9rem; }
+            .btn {
+                height: 50px;
+                font-size: 0.9rem;
+                letter-spacing: 0.15rem;
+            } 
+            .duplicate-actions {
+                flex-direction: column;
+                margin: -10px 0;
+            }
+            
+            .duplicate-help {
+                margin-top: 20px; 
+            }
+        }
+        @media (max-width: 480px) { 
+            .logo-img { max-width: 130px; }
+            .auth-container { 
+                padding: 2.5rem 1.5rem;
+            }
+            .duplicate-icon-wrapper {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .duplicate-actions {
+                flex-direction: column;
+                margin: -10px 0;
+            }
+            
+            .duplicate-help {
+                margin-top: 20px; 
+            }
+            
+            .duplicate-actions .btn {
+                flex: none; 
+                width: 100%;
+                height: 50px; 
+            }
+
+            .duplicate-title { font-size: 1.1rem; }
+            .duplicate-description { font-size: 0.85rem; max-width: 90%; }
+        }
+        @media (max-width: 320px) { 
+            .logo-img { max-width: 100px; }
+            .btn {
+                height: 50px;
+                font-size: 0.9rem;
+                letter-spacing: 0.15rem;
+            } 
+            .duplicate-actions {
+                flex-direction: column;
+                margin: -10px 0;
+            }
+            
+            .duplicate-help {
+                margin-top: 20px; 
+            }
+        }
+        
+        .js-message {
+            background: #ffcc00;
+            color: #000;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .loading-indicator {
+            display: none;
+            color: #8a8a8a;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <noscript>
+        <div class="js-message">
+            <strong>Notice:</strong> JavaScript is required for registration. Please enable it in your browser to continue.
+        </div>
+    </noscript>
+
+    <div id="js-error-message" class="js-message" style="display:none; max-width: 450px; margin: 1rem auto;">
+        <strong>Error:</strong> Could not initialize the security module. Please check your network connection or disable ad-blockers and try again.
+    </div>
+    
+    <div class="auth-container {% if duplicate_found %}show-duplicate{% endif %}" id="auth-container">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-message">
+              {% for message in messages %}
+                <span>{{ message }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div id="register-form-wrapper" class="form-wrapper">
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <input type="text" name="username" class="input-field" placeholder="FULL NAME" required id="name-field">
+                    <div class="name-error" id="name-error">Name is required</div>
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" name="email" class="input-field" placeholder="EMAIL" required id="email-field">
+                    <div class="email-error" id="email-error">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="password-field-container">
+                        <input type="password" id="password" name="password" class="input-field" placeholder="PASSWORD" required>
+                        <div class="password-toggle" onclick="togglePassword()">
+                            <svg id="eye-icon" viewBox="0 0 24 24">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="password-error" id="password-length-error">Password must be at least 8 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="confirm-password" name="confirm_password" class="input-field" placeholder="RETYPE PASSWORD" required>
+                    <div class="password-error" id="password-match-error">Passwords do not match</div>
+                </div>
+                
+                <input type="hidden" name="fp_visitor_id" id="fp_visitor_id" value="">
+                
+                <button type="button" class="btn" id="continue-btn">Continue</button>
+            </form>
+<div class="auth-link">
+    <a class="nav-linky">Already have an account? </a><a href="{{ url_for('login') }}" class="nav-link">Login</a>
+</div>
+        </div>
+
+        <div id="captcha-form-wrapper" class="form-wrapper">
+            <div class="captcha-content">
+                <p class="captcha-text">Please verify that you are not a robot</p>
+                
+                <div class="captcha-instructions">
+                    Complete the reCAPTCHA challenge to continue with your registration
+                </div>
+                
+                <form action="/register" method="post" class="auth-form" id="finalRegisterForm">
+                    <input type="hidden" name="username" id="final-username">
+                    <input type="hidden" name="email" id="final-email">
+                    <input type="hidden" name="password" id="final-password">
+                    <input type="hidden" name="fp_visitor_id" id="final-fp_visitor_id">
+
+                    <div class="captcha-box">
+                        <div id="recaptcha-container"
+                             class="g-recaptcha"
+                             data-sitekey="{{ site_key }}"
+                             data-callback="onCaptchaSuccess"
+                             data-size="normal">
+                        </div>
+                        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+                    </div>
+                    
+                    <div id="security-loading" class="loading-indicator">
+                        Loading security features...
+                    </div>
+                    
+                    <button type="submit" class="btn" id="submit-btn" disabled>Complete Registration</button>
+                </form>
+                
+                <div class="auth-link">
+                    <a href="#" id="back-to-register" class="nav-link">Back to registration</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="duplicate-found-wrapper" class="form-wrapper">
+            <div class="duplicate-icon-wrapper">
+                <img src="{{ url_for('static', filename='icons/error.svg') }}" alt="Alert Icon">
+            </div>
+            
+            <h2 class="duplicate-title">Account Detected</h2>
+            <p class="duplicate-description">
+                Our security system has identified an existing account linked to this device. 
+                To prevent storage abuse, we limit one free account per user.
+            </p>
+            
+            <div class="duplicate-actions">
+                <a href="{{ url_for('login') }}" class="btn btn-primary">Access Account</a>
+                <a href="mailto:contact@cloudxhq.com" class="btn btn-secondary">Contact Support</a>
+            </div>
+            
+            <p class="duplicate-help">
+                Need help? Our team can assist with any registration issues you may encounter.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const continueBtn = document.getElementById('continue-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const loadingIndicator = document.getElementById('security-loading');
+            const authContainer = document.getElementById('auth-container');
+            const nameField = document.getElementById('name-field');
+            const nameError = document.getElementById('name-error');
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirm-password');
+            const passwordMatchError = document.getElementById('password-match-error');
+            const passwordLengthError = document.getElementById('password-length-error');
+            const emailField = document.getElementById('email-field');
+            const emailError = document.getElementById('email-error');
+            const backToRegisterLink = document.getElementById('back-to-register');
+            
+            // Prevent visited link color changes
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                link.addEventListener('click', function() {
+                    this.style.color = getComputedStyle(this).color;
+                });
+            });
+            
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function validateForm() {
+                let isValid = true;
+                
+                // Validate name
+                if (!nameField.value.trim()) {
+                    nameError.style.display = 'block';
+                    nameError.textContent = 'Name is required';
+                    isValid = false;
+                } else {
+                    nameError.style.display = 'none';
+                }
+                
+                // Validate email
+                if (!emailField.value.trim()) {
+                    emailError.style.display = 'block';
+                    emailError.textContent = 'Email is required';
+                    isValid = false;
+                } else if (!isValidEmail(emailField.value)) {
+                    emailError.style.display = 'block';
+                    emailError.textContent = 'Please enter a valid email address';
+                    isValid = false;
+                } else {
+                    emailError.style.display = 'none';
+                }
+                
+                // Validate password length
+                if (!passwordField.value) {
+                    passwordLengthError.style.display = 'block';
+                    passwordLengthError.textContent = 'Password is required';
+                    isValid = false;
+                } else if (passwordField.value.length < 8) {
+                    passwordLengthError.style.display = 'block';
+                    passwordLengthError.textContent = 'Password must be at least 8 characters';
+                    isValid = false;
+                } else {
+                    passwordLengthError.style.display = 'none';
+                }
+                
+                // Validate password match
+                if (!confirmPasswordField.value) {
+                    passwordMatchError.style.display = 'block';
+                    passwordMatchError.textContent = 'Please confirm your password';
+                    isValid = false;
+                } else if (passwordField.value !== confirmPasswordField.value) {
+                    passwordMatchError.style.display = 'block';
+                    passwordMatchError.textContent = 'Passwords do not match';
+                    isValid = false;
+                } else {
+                    passwordMatchError.style.display = 'none';
+                }
+                
+                return isValid;
+            }
+            
+            continueBtn.addEventListener('click', function() {
+                const username = nameField.value.trim();
+                const email = emailField.value.trim();
+                const password = passwordField.value.trim();
+                const confirmPassword = confirmPasswordField.value.trim();
+
+                // Validate form and show errors if any
+                if (!validateForm()) {
+                    return;
+                }
+
+                document.getElementById('final-username').value = username;
+                document.getElementById('final-email').value = email;
+                document.getElementById('final-password').value = password;
+
+                authContainer.classList.add('show-captcha');
+                initSecurityFeatures();
+            });
+            
+            backToRegisterLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.classList.remove('show-captcha');
+            });
+            
+            async function loadFingerprintJS() {
+                try {
+                    const fpPromise = import('https://fpjscdn.net/v3/129iicGLYyMoLV10swGz')
+                        .then(FingerprintJS => FingerprintJS.load({
+                            region: "eu"
+                        }));
+
+                    const fp = await fpPromise;
+                    const result = await fp.get();
+                    const visitorId = result.visitorId;
+
+                    document.getElementById('fp_visitor_id').value = visitorId;
+                    document.getElementById('final-fp_visitor_id').value = visitorId;
+                    
+                    window.fingerprintLoaded = true;
+                    checkSecurityReady();
+                    
+                } catch (error) {
+                    console.error("Fingerprinting error:", error);
+                    document.getElementById('js-error-message').style.display = 'block';
+                    window.fingerprintLoaded = false;
+                    checkSecurityReady();
+                }
+            }
+            
+            function checkSecurityReady() {
+                if (window.fingerprintLoaded) {
+                    loadingIndicator.style.display = 'none';
+                }
+            }
+
+            function initSecurityFeatures() {
+                loadingIndicator.style.display = 'block';
+                loadFingerprintJS();
+            }
+            
+            const logo = document.querySelector('.logo-img');
+            
+            if (authContainer.classList.contains('show-duplicate')) {
+                logo.style.display = 'none';
+            }
+            
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.attributeName === 'class') {
+                        if (authContainer.classList.contains('show-duplicate')) {
+                            logo.style.display = 'none';
+                        } else {
+                            logo.style.display = 'block';
+                        }
+                    }
+                });
+            });
+            
+            observer.observe(authContainer, { attributes: true });
+        });
+        
+        function onCaptchaSuccess(token) {
+            document.getElementById('submit-btn').disabled = false;
+        }
+        
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shared Files - CloudX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #000000;
+      --surface: #0a0a0a;
+      --border: rgba(255, 255, 255, 0.06);
+      --text: #ffffff;
+      --text-dim: rgba(255, 255, 255, 0.5);
+      --accent: #ffffff;
+      --danger: #ef4444;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .logo-img {
+      max-width: 150px;
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0;
+    }
+
+    .shared-files-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem 2.5rem;
+    }
+
+    .page-header {
+      margin: 3rem 0 2.5rem 0;
+      text-align: center;
+    }
+
+    .page-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: var(--text-dim);
+      font-weight: 300;
+    }
+
+    .shared-files-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .shared-file-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .shared-file-item:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .file-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-icon-wrapper {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .file-icon {
+      width: 32px;
+      height: 32px;
+      filter: brightness(0) invert(1);
+    }
+
+    .file-icon[src*="pdf.svg"] {
+      filter: brightness(0) invert(53%) sepia(94%) saturate(7499%) hue-rotate(359deg) brightness(101%) contrast(112%);
+    }
+
+    .file-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-name {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--text);
+      margin: 0 0 0.5rem 0;
+      word-break: break-word;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .file-name:hover {
+      color: var(--text-dim);
+    }
+
+    .file-date {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 300;
+    }
+
+    .file-date .material-icons {
+      font-size: 1.1rem;
+      position: relative;
+      top: 0;
+    }
+
+    .file-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      height: 38px;
+      box-sizing: border-box;
+    }
+
+    .action-btn .material-icons {
+      font-size: 1.2rem;
+      position: relative;
+      top: 0;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .action-btn.danger {
+      border-color: rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+    }
+
+    .action-btn.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--danger);
+    }
+
+    .share-link-section {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .share-link-wrapper {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .share-link-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-family: 'Courier New', monospace;
+      font-weight: 300;
+      outline: none;
+      height: 44px;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .share-link-input:focus {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.875rem;
+      font-weight: 300;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 44px;
+      box-sizing: border-box;
+    }
+
+    .copy-btn .material-icons {
+      font-size: 1.2rem;
+      position: relative;
+      top: 0;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .copy-btn.copied {
+      background: rgba(76, 175, 80, 0.1);
+      border-color: rgba(76, 175, 80, 0.5);
+      color: #4caf50;
+    }
+
+    .analytics-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .analytics-item {
+      text-align: center;
+      padding: 1.25rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+      position: relative; 
+      overflow: hidden;   
+    }
+
+    .analytics-item:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .analytics-value {
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.5rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .analytics-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 300;
+    }
+    
+    .analytics-item.locked {
+      cursor: help;
+    }
+    .analytics-item.locked .analytics-value {
+      filter: blur(8px);
+      user-select: none;
+      opacity: 0.6;
+    }
+    .analytics-item.locked::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 10, 10, 0.3);
+      backdrop-filter: blur(1.5px);
+      -webkit-backdrop-filter: blur(1.5px);
+      border-radius: inherit;
+    }
+    .locked-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem !important;
+        color: rgba(255, 255, 255, 0.7);
+        z-index: 2;
+    }
+
+    .empty-state {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 250px);
+      min-height: 300px;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    .empty-state-content {
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .empty-icon {
+      width: 80px;
+      height: 80px;
+      filter: brightness(0) invert(1);
+    }
+
+    .empty-title {
+      color: var(--text);
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    .empty-description {
+      color: var(--text-dim);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.4;
+      margin: 0;
+      max-width: 300px;
+    }
+    
+    /* --- SHARE MODAL STYLES --- */
+    .share-options { padding-bottom: 20px; }
+    .share-option-item { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .share-option-item > label:first-child { flex-shrink: 0; flex-basis: 120px; text-align: left; }
+    .share-option-item .input-field { flex-grow: 1; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; top: 10px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
+    input:checked + .slider { background-color: #1DB954; }
+    input:focus + .slider { box-shadow: 0 0 1px #1DB954; }
+    input:checked + .slider:before { transform: translateX(20px); }
+    .slider.round { border-radius: 24px; }
+    .slider.round:before { border-radius: 50%; }
+    .password-field-container { position: relative; flex-grow: 1; }
+    .password-toggle { position: absolute; right: 5px; top: 60%; transform: translateY(-50%); cursor: pointer; opacity: 0.7; transition: opacity 0.3s ease; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+    .password-toggle:hover { opacity: 1; }
+    .password-toggle svg { width: 18px; height: 18px; stroke: var(--text); fill: none; stroke-width: 2; }
+    .access-checkbox-group { display: flex; gap: 25px; align-items: center; flex-grow: 1; }
+    .checkbox-container { display: flex; align-items: center; gap: 8px; }
+    .checkbox-container input[type="checkbox"] { appearance: none; -webkit-appearance: none; background-color: #333; border: 1px solid #555; border-radius: 4px; width: 18px; height: 18px; cursor: pointer; position: relative; transition: background-color: 0.3s ease; }
+    .checkbox-container input[type="checkbox"]:checked { background-color: #1DB954; border-color: #1DB954; }
+    .checkbox-container input[type="checkbox"]:checked::after { content: '✔'; font-size: 12px; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .checkbox-container input[type="checkbox"]:disabled { cursor: not-allowed; background-color: #222; border-color: #444; }
+    .checkbox-container input[type="checkbox"]:checked:disabled { background-color: #1DB954; opacity: 0.7; }
+    .checkbox-container input[type="checkbox"]:disabled + label { cursor: not-allowed; opacity: 0.5; }
+    .checkbox-container label { cursor: pointer; user-select: none; color: #888; transition: color 0.3s ease; font-size: 17px; position: relative; top: 4px; }
+    .checkbox-container input[type="checkbox"]:checked + label { color: inherit; }
+
+    /* --- SLIDESHOW POPUP STYLES --- */
+    .slideshow-popup .upgrade-btn {
+      display: inline-block;
+      margin-top: 20px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .limit-popup {
+        background: #ffffff;
+        color: #000000;
+        padding: 30px;
+        margin: 30px auto;
+        text-align: center;
+        border-radius: 8px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1001;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .limit-popup.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .limit-popup h3 {
+        font-size: 1.5rem;
+        margin: 0 0 10px 0;
+        font-weight: 500;
+    }
+
+    .limit-popup p {
+        margin: 0 0 25px 0;
+        line-height: 1.5;
+        opacity: 0.8;
+    }
+
+    .limit-popup .btn {
+        background: transparent;
+        border: 2px solid #000000;
+        color: #000000;
+    }
+
+    .limit-popup .btn:hover {
+        background: #000000;
+        color: #ffffff;
+    }
+
+    .limit-popup .close-popup {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #000000;
+        opacity: 0.7;
+        transition: all 0.2s ease;
+    }
+
+    .limit-popup .close-popup:hover {
+        opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .logo-img { max-width: 120px; }
+      .shared-files-container { padding: 0 1.5rem 2.5rem; }
+      .page-header { margin: 2rem 0; }
+      .shared-file-item { padding: 1.5rem; }
+      .file-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .file-actions { width: 100%; justify-content: flex-start; }
+      .share-link-wrapper { flex-direction: column; gap: 0.75rem; }
+      .copy-btn { width: 100%; justify-content: center; }
+      .analytics-section { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .logo-img { max-width: 110px; }
+      .shared-files-container { padding: 0 1rem 2rem; }
+      .shared-file-item { padding: 1.25rem; border-radius: 1.25rem; }
+      .page-header { margin: 1.5rem 0; }
+      .analytics-section { grid-template-columns: 1fr; }
+      .action-btn span { display: none; }
+      .action-btn { padding: 0.6rem; width: 38px; height: 38px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen">
+    <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+    </div>
+    <div class="mobile-menu-items">
+      <div class="mobile-menu-user">{{ username }} ({{ details.plan_name }} Plan)</div>
+      <a href="{{ url_for('mycloud') }}" class="mobile-menu-item">My Cloud</a>
+      <a href="{{ url_for('shared_files') }}" class="mobile-menu-item">My Shared Files</a>
+      <a href="{{ url_for('account') }}" class="mobile-menu-item active">Account</a>
+      {% if tier == 'free' %}
+        <a href="{{ url_for('upgrade') }}" class="mobile-menu-item">Go Premium</a>
+      {% elif tier in ['basic', 'plus'] %}
+        <a href="{{ url_for('upgrade') }}" class="mobile-menu-item">Upgrade</a>
+      {% endif %}
+      <a href="{{ url_for('logout') }}" class="mobile-menu-item" style="border-bottom: none;">Logout</a>
+    </div>
+  </div>
+  <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+        
+        <div class="search-container">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path>
+          </svg>
+          <input type="text" class="search-bar" id="search-input" placeholder="Search shared files...">
+        </div>
+
+        <div class="hamburger-menu" id="hamburger-toggle">
+          <div class="hamburger-icon" id="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="shared-files-container">
+      {% if shares %}
+        <div class="page-header">
+          <h1 class="page-title">Shared Files</h1>
+          <p class="page-subtitle">Manage your shared links and track analytics</p>
+        </div>
+
+        <div class="shared-files-list" id="shared-files-list">
+            {% for share in shares %}
+            <div class="shared-file-item">
+              <div class="file-header">
+                <div class="file-info">
+                  <div class="file-icon-wrapper">
+                    <img src="{{ share.file_icon }}" alt="file" class="file-icon">
+                  </div>
+                  <div class="file-details">
+                    <h3 class="file-name" 
+                        onclick="openShareModal('{{ share.item_path }}', '{{ share.file_name }}', {{ 'true' if share.is_dir else 'false' }})"
+                        title="Click to manage share options">{{ share.file_name }}</h3>
+                    <p class="file-date">
+                      <i class="material-icons">schedule</i>
+                      Shared on {{ share.share_date }}
+                    </p>
+                  </div>
+                </div>
+                <div class="file-actions">
+                  {% if tier in ['free', 'basic', 'plus'] %}
+                    <button type="button" class="action-btn" onclick="showAnalyticsPopup()">
+                        <i class="material-icons">analytics</i>
+                        <span>Analytics</span>
+                    </button>
+                  {% else %}
+                    <a href="{{ url_for('analytics', token=share.token) }}" class="action-btn">
+                        <i class="material-icons">analytics</i>
+                        <span>Analytics</span>
+                    </a>
+                  {% endif %}
+                  <button class="action-btn danger" onclick="deleteShare(this, '{{ share.item_path }}')">
+                    <i class="material-icons">delete</i>
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="share-link-section">
+                <div class="share-link-wrapper">
+                  <input type="text" class="share-link-input" value="{{ share.share_link }}" readonly>
+                  <button class="copy-btn" onclick="copyLink(this)">
+                    <i class="material-icons">content_copy</i>
+                    Copy
+                  </button>
+                </div>
+              </div>
+
+              <div class="analytics-section">
+                <div class="analytics-item">
+                  <span class="analytics-value">{{ "{:,}".format(share.total_views) }}</span>
+                  <span class="analytics-label">Link Views</span>
+                </div>
+                
+                {% if tier in ['plus', 'pro'] %}
+                  <div class="analytics-item">
+                    <span class="analytics-value">{{ "{:,}".format(share.unique_visitors) }}</span>
+                    <span class="analytics-label">Unique Visitors</span>
+                  </div>
+                {% else %}
+                  <div class="analytics-item locked" onclick="showAnalyticsPopup()">
+                    <i class="material-icons locked-icon">lock</i>
+                    <span class="analytics-value">{{ "{:,}".format(share.unique_visitors) }}</span>
+                    <span class="analytics-label">Unique Visitors</span>
+                  </div>
+                {% endif %}
+                
+                {% if tier in ['plus', 'pro'] %}
+                  <div class="analytics-item">
+                    <span class="analytics-value">{{ "{:,}".format(share.total_downloads) }}</span>
+                    <span class="analytics-label">Downloads</span>
+                  </div>
+                {% else %}
+                  <div class="analytics-item locked" onclick="showAnalyticsPopup()">
+                    <i class="material-icons locked-icon">lock</i>
+                    <span class="analytics-value">{{ "{:,}".format(share.total_downloads) }}</span>
+                    <span class="analytics-label">Downloads</span>
+                  </div>
+                {% endif %}
+              </div>
+              </div>
+            {% endfor %}
+        </div>
+      {% else %}
+        <div class="shared-files-list" id="shared-files-list">
+          <div class="empty-state">
+            <div class="empty-state-content">
+              <h3 class="empty-title">Empty</h3>
+              <p class="empty-description">You haven't shared anything yet.</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="modal" id="share-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Share Item</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="share-form">
+                <input type="hidden" id="share-path" name="path">
+                <p id="share-modal-message">Generate a secure link to share your item.</p>
+                
+                <div class="share-options">
+                    <div class="share-option-item">
+                        <label>Access:</label>
+                        <div class="access-checkbox-group">
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="access-preview" name="access_preview">
+                                <label for="access-preview">Preview</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="access-download" name="access_download">
+                                <label for="access-download">Download</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="share-option-item">
+                        <label for="expiry-select">Link expires in:</label>
+                        <select id="expiry-select" name="expiry" class="input-field" disabled>
+                            <option value="1">1 hour</option>
+                            <option value="24" selected>1 day (24 hours)</option>
+                            <option value="168">1 week (7 days)</option>
+                            <option value="720">1 month (30 days)</option>
+                        </select>
+                         <label class="switch">
+                            <input type="checkbox" id="expiry-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                     <div class="share-option-item">
+                        <label for="password-input">Password:</label>
+                        <div class="password-field-container">
+                            <input type="password" id="password-input" name="password" class="input-field" placeholder="Optional" disabled>
+                            <div class="password-toggle" onclick="toggleSharePassword()">
+                                <svg id="share-eye-icon" viewBox="0 0 24 24">
+                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="password-switch">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="share-link-container" id="share-link-container" style="display:none;">
+                    <label>Your shareable link:</label>
+                    <div class="share-link">
+                        <input type="text" id="share-url" class="input-field" readonly>
+                        <button type="button" id="copy-link-btn" class="btn small">Copy</button>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="submit" class="btn" id="create-link-btn">Update Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="modal-overlay"></div>
+
+  <div class="popup-overlay" id="slideshow-popup-overlay"></div>
+  <div class="slideshow-popup" id="slideshow-popup">
+      <button class="close-popup" aria-label="Close popup">×</button>
+      <div class="slideshow-container">
+          <div class="slide active" data-slide="1">
+              <p>Enable downloads for your shared links</p>
+          </div>
+          <div class="slide" data-slide="2">
+              <p>Control access with link expiration dates</p>
+          </div>
+          <div class="slide" data-slide="3">
+              <p>Protect sensitive files with passwords</p>
+          </div>
+      </div>
+      <div class="slideshow-dots">
+          <span class="dot active" data-slide="1"></span>
+          <span class="dot" data-slide="2"></span>
+          <span class="dot" data-slide="3"></span>
+      </div>
+      <a href="{{ url_for('upgrade') }}" class="btn upgrade-btn">
+          <span>Upgrade Now</span>
+      </a>
+  </div>
+
+  <div class="popup-overlay" id="analytics-popup-overlay"></div>
+  <div class="limit-popup" id="analytics-popup">
+    <button class="close-popup" aria-label="Close popup">&times;</button>
+    <h3>Unlock Full Analytics</h3>
+    <p>Upgrade your plan to track unique visitors, download counts, and get detailed engagement insights for your shared links.</p>
+    <a href="{{ url_for('upgrade') }}" class="btn">Upgrade Now</a>
+  </div>
+
+  <script>
+    const USER_TIER = '{{ tier }}';
+
+    const modals = {
+        share: document.getElementById('share-modal'),
+        overlay: document.getElementById('modal-overlay')
+    };
+
+    function openModal(modalName) {
+        closeModals();
+        if (modals[modalName]) {
+            modals[modalName].classList.add('active');
+            modals.overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeModals() {
+        for (const modalKey in modals) {
+            const modal = modals[modalKey];
+            if (modal) modal.classList.remove('active');
+        }
+        if (modals.overlay) modals.overlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('click', e => {
+        if (e.target.matches('.modal-close, .modal-cancel, .modal-overlay')) {
+            closeModals();
+        }
+    });
+
+    window.addEventListener("load", () => {
+      const loadingScreen = document.querySelector(".loading-screen");
+      if (loadingScreen) {
+        loadingScreen.style.opacity = "0";
+        setTimeout(() => loadingScreen.remove(), 300);
+      }
+    });
+
+    function setupHamburgerMenu() {
+      const toggle = document.getElementById("hamburger-toggle");
+      const icon = document.getElementById("hamburger-icon");
+      const menu = document.getElementById("mobile-menu");
+      const overlay = document.getElementById("mobile-menu-overlay");
+
+      const toggleMenu = (open) => {
+        icon.classList.toggle("active", open);
+        menu.classList.toggle("active", open);
+        overlay.classList.toggle("active", open);
+        document.body.classList.toggle("menu-active", open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+
+      toggle.addEventListener('click', () => toggleMenu(!menu.classList.contains('active')));
+      overlay.addEventListener('click', () => toggleMenu(false));
+    }
+
+    function copyLink(button) {
+      const input = button.closest('.share-link-wrapper').querySelector('.share-link-input');
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => {
+        const icon = button.querySelector('.material-icons');
+        const originalText = "Copy";
+        const originalIcon = "content_copy";
+        
+        button.innerHTML = `<i class="material-icons">check</i> Copied!`;
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          button.innerHTML = `<i class="material-icons">${originalIcon}</i> ${originalText}`;
+          button.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function deleteShare(button, itemPath) {
+      if (confirm('Are you sure you want to permanently delete this shared link? This action cannot be undone.')) {
+        const fileItem = button.closest('.shared-file-item');
+        const formData = new FormData();
+        formData.append('path', itemPath);
+        
+        fetch("{{ url_for('delete_share_link') }}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                fileItem.style.transition = 'opacity 0.3s, transform 0.3s';
+                fileItem.style.opacity = '0';
+                fileItem.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    fileItem.remove();
+                    if (document.querySelectorAll('.shared-file-item').length === 0) {
+                        location.reload();
+                    }
+                }, 350);
+            } else {
+                alert('Error deleting share link: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while trying to delete the share link.');
+        });
+      }
+    }
+
+    function setupSearch() {
+      const searchInput = document.getElementById('search-input');
+      if (!searchInput) return;
+      const fileList = document.getElementById('shared-files-list');
+
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const fileItems = fileList.querySelectorAll('.shared-file-item');
+        
+        fileItems.forEach(item => {
+          const fileName = item.querySelector('.file-name').textContent.toLowerCase();
+          item.style.display = fileName.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
+    function toggleSharePassword() {
+        const passwordField = document.getElementById('password-input');
+        const eyeIcon = document.getElementById('share-eye-icon');
+        
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        } else {
+            passwordField.type = 'password';
+            eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+        }
+    }
+
+    let currentShareSlide = 1;
+    let shareSlideInterval;
+    const totalShareSlides = 3;
+
+    function showShareSlide(n) {
+        const slides = document.querySelectorAll('#slideshow-popup .slide');
+        const dots = document.querySelectorAll('#slideshow-popup .dot');
+        
+        currentShareSlide = n > totalShareSlides ? 1 : n < 1 ? totalShareSlides : n;
+        
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        const currentSlide = document.querySelector(`#slideshow-popup .slide[data-slide="${currentShareSlide}"]`);
+        const currentDot = document.querySelector(`#slideshow-popup .dot[data-slide="${currentShareSlide}"]`);
+
+        if(currentSlide) currentSlide.classList.add('active');
+        if(currentDot) currentDot.classList.add('active');
+    }
+
+    function nextShareSlide() {
+        showShareSlide(currentShareSlide + 1);
+    }
+
+    function startShareSlideshow() {
+        if (shareSlideInterval) clearInterval(shareSlideInterval);
+        shareSlideInterval = setInterval(nextShareSlide, 3000);
+    }
+
+    function showShareSlideshowPopup(slideNumber = 1) {
+        const popup = document.getElementById('slideshow-popup');
+        const overlay = document.getElementById('slideshow-popup-overlay');
+        
+        popup.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        currentShareSlide = slideNumber;
+        showShareSlide(currentShareSlide);
+        startShareSlideshow();
+    }
+
+    function closeShareSlideshowPopup() {
+        const popup = document.getElementById('slideshow-popup');
+        const overlay = document.getElementById('slideshow-popup-overlay');
+        
+        popup.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        if (shareSlideInterval) clearInterval(shareSlideInterval);
+    }
+
+    function showAnalyticsPopup() {
+        document.getElementById('analytics-popup').classList.add('active');
+        document.getElementById('analytics-popup-overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAnalyticsPopup() {
+        document.getElementById('analytics-popup').classList.remove('active');
+        document.getElementById('analytics-popup-overlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    async function openShareModal(path, name, isDir) {
+        const shareForm = document.getElementById('share-form');
+        const createLinkBtn = document.getElementById('create-link-btn');
+        const shareUrlInput = document.getElementById('share-url');
+        const linkContainer = document.getElementById('share-link-container');
+        const accessPreviewCheckbox = document.getElementById('access-preview');
+        const accessDownloadCheckbox = document.getElementById('access-download');
+        const accessDownloadContainer = accessDownloadCheckbox.parentElement;
+        const expiryContainer = document.getElementById('expiry-switch').parentElement.parentElement;
+        const passwordContainer = document.getElementById('password-switch').parentElement.parentElement;
+
+        shareForm.reset();
+        linkContainer.style.display = 'none';
+        createLinkBtn.disabled = false;
+        
+        document.getElementById('share-path').value = path;
+        document.getElementById('share-modal-message').textContent = `Manage share options for: ${name}`;
+
+        const isBasicOrFree = USER_TIER === 'free' || USER_TIER === 'basic';
+        
+        accessDownloadContainer.onclick = USER_TIER === 'free' ? (e) => { e.preventDefault(); closeModals(); setTimeout(() => showShareSlideshowPopup(1), 200); } : null;
+        expiryContainer.onclick = isBasicOrFree ? (e) => { e.preventDefault(); closeModals(); setTimeout(() => showShareSlideshowPopup(2), 200); } : null;
+        passwordContainer.onclick = isBasicOrFree ? (e) => { e.preventDefault(); closeModals(); setTimeout(() => showShareSlideshowPopup(3), 200); } : null;
+
+        accessPreviewCheckbox.disabled = isDir;
+
+        try {
+            const formData = new FormData();
+            formData.append('path', path);
+            const response = await fetch("{{ url_for('get_share_details') }}", { method: 'POST', body: formData });
+            const result = await response.json();
+
+            if (result.success && result.exists) {
+                shareUrlInput.value = result.url;
+                linkContainer.style.display = 'block';
+                accessPreviewCheckbox.checked = result.access === 'preview' || result.access === 'both';
+                accessDownloadCheckbox.checked = result.access === 'download' || result.access === 'both';
+            }
+        } catch (error) {
+            console.error('Failed to fetch share details:', error);
+        } finally {
+            openModal('share');
+        }
+    }
+
+    function setupShareModal() {
+        const shareForm = document.getElementById('share-form');
+        const createLinkBtn = document.getElementById('create-link-btn');
+        const accessPreviewCheckbox = document.getElementById('access-preview');
+        const accessDownloadCheckbox = document.getElementById('access-download');
+        
+        shareForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const originalButtonText = createLinkBtn.textContent;
+            createLinkBtn.disabled = true;
+            createLinkBtn.textContent = 'Processing...';
+
+            const formData = new FormData();
+            formData.append('path', document.getElementById('share-path').value);
+            formData.append('allow_preview', accessPreviewCheckbox.checked);
+            formData.append('allow_download', accessDownloadCheckbox.checked);
+            formData.append('expiry', '0'); // Hardcoded for basic/free
+            
+            try {
+                const response = await fetch("{{ url_for('create_share_link') }}", { method: 'POST', body: formData });
+                const result = await response.json();
+                if (result.success) {
+                    createLinkBtn.textContent = 'Link Updated!';
+                    setTimeout(() => { window.location.reload(); }, 1500);
+                } else {
+                    alert('Error: ' + result.message);
+                    createLinkBtn.textContent = originalButtonText;
+                    createLinkBtn.disabled = false;
+                }
+            } catch (error) {
+                alert('An unexpected error occurred.');
+                createLinkBtn.textContent = originalButtonText;
+                createLinkBtn.disabled = false;
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setupHamburgerMenu();
+      setupSearch();
+      setupShareModal();
+      
+      document.querySelector('#slideshow-popup .close-popup').addEventListener('click', closeShareSlideshowPopup);
+      document.getElementById('slideshow-popup-overlay').addEventListener('click', closeShareSlideshowPopup);
+      document.querySelectorAll('#slideshow-popup .dot').forEach(dot => {
+          dot.addEventListener('click', function() {
+              currentShareSlide = parseInt(this.dataset.slide);
+              showShareSlide(currentShareSlide);
+              startShareSlideshow();
+          });
+      });
+      
+      document.querySelector('#analytics-popup .close-popup').addEventListener('click', closeAnalyticsPopup);
+      document.getElementById('analytics-popup-overlay').addEventListener('click', closeAnalyticsPopup);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Payment - CloudX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">    
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&vault=true&intent=subscription&components=buttons"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000000;
+            --surface: #0a0a0a;
+            --border: rgba(255, 255, 255, 0.06);
+            --text: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --accent: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.4s ease;
+        }
+
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--text);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .page-content {
+            opacity: 0;
+            animation: fadeIn 0.6s 0.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 80px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+        }
+
+        .nav-return {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: fit-content;
+            margin-left: -0.75rem;
+        }
+
+        .nav-return:hover {
+            color: var(--text);
+        }
+
+        .nav-return svg {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+        }
+
+        .logo {
+            height: 32px;
+            width: auto;
+            justify-self: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .payment-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 2.5rem;
+            padding: 2.5rem 0 5rem;
+            min-height: calc(100vh - 80px);
+            align-items: start;
+        }
+
+        .plan-summary {
+            position: sticky;
+            top: 120px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .plan-summary:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .plan-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .plan-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price-container {
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .plan-price .currency {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .plan-interval {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .plan-features li {
+            padding: 0.875rem 0;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            font-weight: 300;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.2s;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-features li:hover {
+            color: var(--text);
+        }
+
+        .security-info {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .security-info-title {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .security-info-text {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .payment-form {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .payment-form:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: var(--text-dim);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .payment-method {
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            transition: border-color 0.2s;
+        }
+
+        .payment-method:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .method-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .method-title {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .method-content {
+            padding: 1.5rem;
+        }
+
+        #paypal-button-container {
+            min-height: 50px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
+            color: #fca5a5;
+            font-size: 0.875rem;
+            font-weight: 300;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .payment-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 1.5rem 0 2.5rem;
+            }
+            
+            .plan-summary {
+                position: static;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .header-container {
+                padding: 0 1rem;
+                height: 64px;
+            }
+            
+            .logo {
+                height: 24px;
+            }
+            
+            .nav-return {
+                margin-left: -0.5rem;
+            }
+            
+            .plan-summary,
+            .payment-form {
+                padding: 1.5rem;
+            }
+            
+            .form-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .plan-price {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                height: 20px;
+            }
+            
+            .nav-return svg {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .plan-price {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="page-content">
+        <header class="header">
+            <div class="header-container">
+                <a href="/upgrade" class="nav-return">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </a>
+                <img src="/static/icons/logo.png" alt="CloudX" class="logo">
+                <div></div>
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="payment-layout">
+                    <div class="plan-summary">
+                        <div class="plan-header">
+                            <div class="plan-name" id="planName">Basic Plan</div>
+                            <div class="plan-price-container">
+                                <div class="plan-price">
+                                    <span class="currency">$</span><span id="planPrice">0.99</span>
+                                </div>
+                            </div>
+                            <div class="plan-interval">per month</div>
+                        </div>
+
+                        <ul class="plan-features" id="planFeatures"></ul>
+
+                        <div class="security-info">
+                            <div class="security-info-title">Secured by PayPal</div>
+                            <div class="security-info-text">256-bit SSL encryption • Cancel anytime</div>
+                        </div>
+                    </div>
+
+                    <div class="payment-form">
+                        <div class="form-header">
+                            <h1>Complete payment</h1>
+                            <p>Choose your preferred payment method</p>
+                        </div>
+
+                        <div class="error-message" id="errorMessage"></div>
+
+                        <div class="payment-methods">
+                            <div class="payment-method">
+                                <div class="method-header">
+                                    <div class="method-title">PayPal</div>
+                                </div>
+                                <div class="method-content">
+                                    <div id="paypal-button-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const planTier = urlParams.get('tier') || 'basic';
+
+        const plans = {
+            basic: {
+                name: 'Basic',
+                price: '0.99',
+                id: '{{ basic_plan_id }}',
+                features: [
+                    '50 GB Secure Storage',
+                    '5 GB max File Upload',
+                    'End-to-end Encryption',
+                    'Virus Scan',
+                    'High-speed Transfers',
+                    'Advanced Sharing Controls',
+                ]
+            },
+            plus: {
+                name: 'Plus',
+                price: '2.99',
+                id: '{{ plus_plan_id }}',
+                features: [
+                    '200 GB Secure Storage',
+                    '20 GB max File Upload',
+                    'End-to-end Encryption',
+                    'Virus Scan',
+                    'Ultra-fast Transfers',
+                    'Advanced Sharing Controls',
+                    'Password-protected Links',
+                    'Link Expiration Date',
+                ]
+            },
+            pro: {
+                name: 'Pro',
+                price: '4.99',
+                id: '{{ pro_plan_id }}',
+                features: [
+                    '500 GB Secure Storage',
+                    '50 GB max File Upload',
+                    'End-to-end Encryption',
+                    'Virus Scan',
+                    'Maximum Speed Transfers',
+                    'Advanced Sharing Controls',
+                    'Password-protected Links',
+                    'Link Expiration Date',
+                    'Real-time Links Analytics',
+                ]
+            }
+        };
+
+        const currentPlan = plans[planTier] || plans.basic;
+
+        window.addEventListener('load', function() {
+            document.getElementById('loadingScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 400);
+        });
+
+        document.getElementById('planName').textContent = `${currentPlan.name} Plan`;
+        document.getElementById('planPrice').textContent = currentPlan.price;
+        document.getElementById('planFeatures').innerHTML = currentPlan.features.map(f => 
+            `<li>${f}</li>`
+        ).join('');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorMessage = document.getElementById('errorMessage');
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                setTimeout(() => { errorMessage.style.display = 'none'; }, 5000);
+            }
+
+            function handleApproval(data) {
+                document.getElementById('paypal-button-container').innerHTML = 
+                    '<div style="text-align: center; padding: 1rem; color: rgba(255,255,255,0.5);">Processing your subscription...</div>';
+                
+                fetch('/api/paypal/capture-subscription', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        subscriptionID: data.subscriptionID,
+                        planTier: planTier
+                    }),
+                })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Subscription successful! Redirecting to your dashboard...');
+                        window.location.href = result.redirectUrl || '/mycloud';
+                    } else {
+                        showError(result.error || 'Subscription failed. Please try again.');
+                        location.reload();
+                    }
+                })
+                .catch(err => {
+                    console.error('PayPal Capture Error:', err);
+                    showError('A network error occurred. Please try again.');
+                    location.reload();
+                });
+            }
+            
+            const buttonConfig = {
+                createSubscription: function(data, actions) {
+                    if (!currentPlan.id) {
+                        console.error("Plan ID is missing!");
+                        showError("Configuration error: Plan ID not found.");
+                        return;
+                    }
+                    return actions.subscription.create({
+                        'plan_id': currentPlan.id
+                    });
+                },
+                onApprove: handleApproval,
+                onError: function(err) {
+                    console.error('PayPal SDK Error:', err);
+                    showError('An error occurred with the payment gateway. Please refresh and try again.');
+                },
+                onCancel: function(data) {
+                    console.log('Payment cancelled by user.');
+                }
+            };
+
+            paypal.Buttons({
+                ...buttonConfig,
+                style: { shape: 'rect', color: 'silver', layout: 'vertical', height: 50 }
+            }).render('#paypal-button-container');
+        });
+    </script>
+</body>
+</html>

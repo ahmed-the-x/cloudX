@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - CloudX</title>
+       <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray: #1a1a1a;
+            --danger: #ff0000;
+            --info: #007bff;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .auth-container {
+            max-width: 450px;
+            margin: 5rem auto;
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .input-field {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--white);
+            color: var(--white);
+            padding: 14px 0 10px 0;
+            width: 100%;
+            font-size: 1.1rem;
+            height: 44px;
+            box-sizing: border-box;
+            text-align: center; /* Center the code input */
+            letter-spacing: 0.5rem; /* Space out digits */
+        }
+
+        .input-field::placeholder {
+            color: var(--white);
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            font-size: 0.9rem;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-bottom-color: var(--white);
+        }
+
+        .btn {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--white);
+            padding: 0 25px;
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+
+
+        .flash-message {
+            background: var(--gray);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.05rem;
+        }
+
+        .logo-img {
+          max-width: 180px;
+          width: 100%;
+          height: auto;
+          display: block;
+          margin: -40px auto 70px auto;
+        }
+
+        .form-description {
+            font-size: 1rem;
+            color: #b3b3b3;
+            margin: 40px 0 20px 0;
+            line-height: 1.5;
+        }
+
+.nav-linky {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link {
+    color: #8a8a8a;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover, .nav-link:active {
+    color: #ffffff;
+}
+
+.nav-link:hover::after, .nav-link:active::after {
+    width: 100%;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div>
+            <p class="form-description">Enter the 6-digit code sent to your email to complete your registration. The code expires in 10 minutes.</p>
+            <form action="{{ url_for('verify_email') }}" method="post" class="auth-form">
+                <input type="text" name="verification_code" class="input-field" placeholder="6-DIGIT CODE" required pattern="\d{6}" maxlength="6" title="Enter the 6-digit code.">
+                <button type="submit" class="btn">Verify Account</button>
+            </form>
+            <div class="auth-link">
+                <a class="nav-linky">Need to change your email?  </a><a href="{{ url_for('register') }}" class="nav-link"> Go back</a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

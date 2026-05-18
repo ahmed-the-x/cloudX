@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudX - Protected File</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --black: #000;
+            --white: #fff;
+            --gray: #1a1a1a;
+            --danger: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+        }
+
+        .share-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Left Brand Section */
+        .brand-section {
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+                #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+        
+        .logo-img {
+            max-width: 230px;
+            height: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .brand-tagline {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: #8a8a8a;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            margin-top: -0.5rem;
+        }
+
+        .brand-cta {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            display: inline-block;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .brand-cta:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-subtext {
+            font-size: 0.9rem;
+            color: #666666;
+            text-align: center;
+            margin-top: 0.75rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+
+        /* Right Password Section */
+        .password-section {
+            background: rgba(255, 255, 255, 0.01);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 2rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .password-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .password-header {
+            margin-bottom: 2rem;
+        }
+
+        .password-icon {
+            width: 48px;
+            height: 48px;
+            filter: invert(1);
+            margin-bottom: 1rem;
+        }
+
+        .password-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .password-subtitle {
+            font-size: 0.9rem;
+            color: #8a8a8a;
+            margin-bottom: 2rem;
+            word-break: break-word;
+        }
+
+        .password-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-btn {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .submit-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .flash-message {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .flash-message.error {
+            background-color: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .share-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            .brand-section {
+                order: 2; /* Move brand section to bottom */
+                min-height: 40vh;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                padding: 2rem 1rem;
+            }
+            .password-section {
+                order: 1; /* Move password section to top */
+                padding: 2rem 1rem;
+                border-left: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="share-container">
+        <div class="brand-section">
+            <img src="{{ url_for('static', filename='icons/logo.png') }}" alt="CloudX Logo" class="logo-img">
+            <div class="brand-tagline">Free • Fast • Secure</div>
+            <a href="{{ url_for('register') }}" class="brand-cta">5GB Free Storage</a>
+            <div class="brand-subtext">No credit card required</div>
+        </div>
+
+        <div class="password-section">
+            <div class="password-card">
+                <div class="password-header">
+                    <img src="{{ url_for('static', filename='icons/lock.svg') }}" alt="Lock Icon" class="password-icon">
+                    <h1 class="password-title">Enter Password</h1>
+                    <p class="password-subtitle">This file is password protected. Please enter the password to continue.</p>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flash-messages">
+                        {% for category, message in messages %}
+                            <li class="flash-message {{ category }}">{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <form action="{{ url_for('verify_share_password', token=token) }}" method="post" class="password-form">
+                    <input type="password" name="password" class="input-field" placeholder="Password" required autofocus>
+                    <button type="submit" class="submit-btn">Unlock File</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
